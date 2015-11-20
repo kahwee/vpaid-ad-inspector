@@ -1,0 +1,9 @@
+sudo: false
+language: node_js
+node_js:
+  - "5.1"
+cache:
+  directories:
+    - node_modules
+after_success:
+  - dpl --provider=s3 --access-key-id=$S3_ACCESS_KEY_ID --secret-access-key=$S3_SECRET_ACCESS_KEY --bucket=vpaid-ad-inspector --region=us-east-1 --acl=public_read
