@@ -1,12 +1,17 @@
 sudo: false
 language: node_js
 node_js:
-  - "5.1"
+- '5.1'
 cache:
   directories:
-    - node_modules
+  - node_modules
 deploy:
+  provider: s3
+  bucket: vpaid-ad-inspector
+  access-key-id: 'AKIAIXBR4MHDOUA6OUXQ'
+  region: us-east-1
+  acl: public_read
+  local-dir: 'dist'
   skip_cleanup: true
-after_success:
-  - gem install dpl
-  - dpl --provider=s3 --access-key-id=$S3_ACCESS_KEY_ID --secret-access-key=$S3_SECRET_ACCESS_KEY --bucket=vpaid-ad-inspector --region=us-east-1 --acl=public_read --local-dir=dist
+  secret_access_key:
+    secure: oyXUKALwrOa3bM1uT/Wj49tU+Gd/A4fPOAk40C9Orx7NDkkOtQnvEdWaVW6JOynI9D9WKKLRfjYWKykM2kvUYE4ENvfDKZDf4a1hoDJG6gHps9+UcuNZGEF1wh1o7ZiB9EZ/p7PukFTB4okC7aMNNxopTb6L+5p592Mm03euB+FkoHGiZk7AOPpddTpV758j8pHrYaAcxEp47zrWC6xkVVgKlM0oyauFWsdCmgTVRIJnbANagTO+fj+YBRY7rMlqVq/cKiziTYa2LNKOfMZ2OtPiqblYkllH198xi+5z6dfyvyooq15RI+FGASPK0FQi2Wf1A7DcO2xX/XvSH8nqIuD47o+28XawRoSXe9eIcE02ShJeOPexud7TuqXgtlwP2VBq2GLf9XV0xquO7uila8fqDfz6cQ0bnDPs7G4ARbgIPk05ixb+k1Y+udYw95MX9AU1QPC0VOXb+/wGB2MjWmBu/v/LcZNpbkoHR7fh+dCNUad1wwl/jcmEM01jjbNPPtlk76SZ/4vzWOZS6h8m0YNQLzP3ZWrVUe+UyyGgcA+6yIAN2x1tlHR37nPx05XDNrj5cTKEcfGJM5ZvcLGsltGlzucNlbCMNzgDxtaGqoMoprcnZ5Kj0FguYp3Tc/+OueOqb9vD7JivPcRULhOJzQGFYWZtVvgBHgjQsmX43Lw=
