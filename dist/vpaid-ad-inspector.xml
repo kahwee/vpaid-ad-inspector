@@ -1,0 +1,127 @@
+<VAST version="2.0">
+	<Ad id="1001">
+		<InLine>
+			<AdSystem version="1.0">KahWee AdSystem</AdSystem>
+			<AdTitle>vpaid-ad-inspector</AdTitle>
+			<Description>To test VPAID player compliance</Description>
+			<Impression>
+				<![CDATA[
+				https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=impression
+				]]>
+			</Impression>
+			<Creatives>
+				<Creative sequence="1">
+					<Linear>
+						<Duration>00:23:59.00</Duration>
+						<TrackingEvents>
+							<Tracking event="start">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=start
+								]]>
+							</Tracking>
+							<Tracking event="firstQuartile">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=firstQuartile
+								]]>
+							</Tracking>
+							<Tracking event="midpoint">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=midpoint
+								]]>
+							</Tracking>
+							<Tracking event="thirdQuartile">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=thirdQuartile
+								]]>
+							</Tracking>
+							<Tracking event="complete">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=complete
+								]]>
+							</Tracking>
+							<Tracking event="pause">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=pause
+								]]>
+							</Tracking>
+							<Tracking event="creativeView">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=creativeView
+								]]>
+							</Tracking>
+							<Tracking event="close">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=close
+								]]>
+							</Tracking>
+							<Tracking event="skip">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=skip
+								]]>
+							</Tracking>
+							<Tracking event="fullscreen">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=fullscreen
+								]]>
+							</Tracking>
+							<Tracking event="mute">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=mute
+								]]>
+							</Tracking>
+							<Tracking event="unmute">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=unmute
+								]]>
+							</Tracking>
+							<Tracking event="acceptInvitation">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=acceptInvitation
+								]]>
+							</Tracking>
+							<Tracking event="collapse">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=collapse
+								]]>
+							</Tracking>
+							<Tracking event="pause">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=pause
+								]]>
+							</Tracking>
+							<Tracking event="resume">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=resume
+								]]>
+							</Tracking>
+							<Tracking event="error">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=error
+								]]>
+							</Tracking>
+						</TrackingEvents>
+						<VideoClicks>
+							<ClickThrough>
+								<![CDATA[
+									https://kw.sg
+								]]>
+							</ClickThrough>
+							<ClickTracking>
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/pixel.gif?e=clicktracking
+								]]>
+							</ClickTracking>
+						</VideoClicks>
+						<MediaFiles>
+							<MediaFile apiFramework="VPAID" delivery="progressive" type="application/javascript">
+								<![CDATA[
+								https://s3.amazonaws.com/vpaid-ad-inspector/vpaid-ad-inspector.js
+								]]>
+							</MediaFile>
+						</MediaFiles>
+					</Linear>
+				</Creative>
+			</Creatives>
+		</InLine>
+	</Ad>
+</VAST>
