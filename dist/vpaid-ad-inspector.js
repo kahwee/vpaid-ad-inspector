@@ -121,7 +121,7 @@ function $setVideoAd() {
   if (!videoSlot) {
     return $throwError.call(this, 'no video');
   }
-  _setSize(videoSlot, this._attributes.size);
+  _setSize(videoSlot, [this._attributes.width, this._attributes.height]);
 
   if (!_setSupportedVideo(videoSlot, this._parameters.videos || [])) {
     return $throwError.call(this, 'no supported video found');
@@ -129,10 +129,10 @@ function $setVideoAd() {
 }
 
 function _setSize(el, size) {
-  el.setAttribute('width', size.width);
-  el.setAttribute('height', size.height);
-  el.style.width = size.width + 'px';
-  el.style.height = size.height + 'px';
+  el.setAttribute('width', size[0]);
+  el.setAttribute('height', size[1]);
+  el.style.width = size[0] + 'px';
+  el.style.height = size[1] + 'px';
 }
 
 function _setSupportedVideo(videoEl, videos) {
@@ -175,6 +175,7 @@ var Linear = (function () {
       companions: '',
       desiredBitrate: 256,
       duration: 30,
+      remainingTime: -1,
       expanded: false,
       icons: '',
       linear: true,
@@ -183,10 +184,8 @@ var Linear = (function () {
       viewMode: 'normal',
       width: 0,
       volume: 1.0,
-      size: {
-        height: 0,
-        width: 0
-      }
+      height: 0,
+      width: 0
     };
 
     // open interactive panel -> AdExpandedChange, AdInteraction
@@ -237,21 +236,14 @@ var Linear = (function () {
   }, {
     key: 'initAd',
     value: function initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
-      this._attributes.size.width = width;
-      this._attributes.size.height = height;
+      this._attributes.width = width;
+      this._attributes.height = height;
       this._attributes.viewMode = viewMode;
       this._attributes.desiredBitrate = desiredBitrate;
 
       this._slot = environmentVars.slot;
       this._videoSlot = environmentVars.videoSlot;
       this._style = (0, _loadCss2.default)('ad.css');
-
-      try {
-        this._parameters = JSON.parse(creativeData.AdParameters);
-      } catch (e) {
-        return $throwError('failed to parse creativeData.AdParameters, mandatory for this ad');
-      }
-
       $setVideoAd.call(this);
       this._videoSlot.addEventListener('timeupdate', _vastTimeupdate2.default.bind(this), false);
       this._videoSlot.addEventListener('ended', _vastEnded2.default.bind(this), false);
@@ -303,7 +295,6 @@ var Linear = (function () {
     value: function skipAd() {
       if (this._destroyed) return;
       if (!this._attributes.skippableState) return;
-
       _toggles.$removeAll.call(this);
       _trigger2.default.call(this, 'AdSkipped');
       _trigger2.default.call(this, 'AdStopped');
@@ -320,8 +311,10 @@ var Linear = (function () {
   }, {
     key: 'resizeAd',
     value: function resizeAd(width, height, viewMode) {
-      console.log('Resize has been called but nothing is implemented');
-      // TODO
+      this._attributes.width = width;
+      this._attributes.height = height;
+      this._attributes.viewMode = viewMode;
+      _trigger2.default.call(this, 'AdSizeChange');
     }
 
     /**
@@ -355,8 +348,9 @@ var Linear = (function () {
 
   }, {
     key: 'expandAd',
-    value: function expandAd() {}
-    // You should implement this
+    value: function expandAd() {
+      _trigger2.default.call(this, 'AdExpandedChange');
+    }
 
     /**
      * collapseAd
@@ -365,8 +359,9 @@ var Linear = (function () {
 
   }, {
     key: 'collapseAd',
-    value: function collapseAd() {}
-    // TODO
+    value: function collapseAd() {
+      _trigger2.default.call(this, 'AdExpandedChange');
+    }
 
     /**
      * subscribe
@@ -473,7 +468,9 @@ var Linear = (function () {
 
   }, {
     key: 'getAdRemainingTime',
-    value: function getAdRemainingTime() {}
+    value: function getAdRemainingTime() {
+      return this._attributes.remainingTime;
+    }
 
     /**
      * getAdDuration
@@ -536,6 +533,7 @@ var Linear = (function () {
         return $throwError('volume is not valid');
       }
       this._videoSlot.volume = this._attributes.volume = volume;
+      _trigger2.default.call(this, 'AdVolumeChange');
     }
   }]);
 
@@ -668,7 +666,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 
-var html = "<div style=\"background:#f5f5f5; width:100%; height:100%\">\n  <div style=\"height: 100%; display: inline-block; float:left;\">\n    <select id=\"eventSelect\" size=\"10\">\n      <option value=\"AdStarted\" selected>AdStarted</option>\n      <option value=\"AdStopped\">AdStopped</option>\n      <option value=\"AdLoaded\">AdLoaded</option>\n      <option value=\"AdLinearChange\">AdLinearChange</option>\n      <option value=\"AdSizeChange\">AdSizeChange</option>\n      <option value=\"AdExpandedChange\">AdExpandedChange</option>\n      <option value=\"AdSkippableStateChange\">AdSkippableStateChange</option>\n      <option value=\"AdDurationChange\">AdDurationChange</option>\n      <option value=\"AdRemainingTimeChange\">AdRemainingTimeChange</option>\n      <option value=\"AdVolumeChange\">AdVolumeChange</option>\n      <option value=\"AdImpression\">AdImpression</option>\n      <option value=\"AdVideoStart\">AdVideoStart</option>\n      <option value=\"AdVideoFirstQuartile\">AdVideoFirstQuartile</option>\n      <option value=\"AdVideoMidpoint\">AdVideoMidpoint</option>\n      <option value=\"AdVideoThirdQuartile\">AdVideoThirdQuartile</option>\n      <option value=\"AdVideoComplete\">AdVideoComplete</option>\n      <option value=\"AdUserAcceptInvitation\">AdUserAcceptInvitation</option>\n      <option value=\"AdUserMinimize\">AdUserMinimize</option>\n      <option value=\"AdUserClose\">AdUserClose</option>\n      <option value=\"AdPaused\">AdPaused</option>\n      <option value=\"AdPlaying\">AdPlaying</option>\n      <option value=\"AdClickThru\">AdClickThru</option>\n      <option value=\"AdError\">AdError</option>\n      <option value=\"AdLog\">AdLog</option>\n      <option value=\"AdInteraction\">AdInteraction</option>\n    </select>\n  </div>\n  <div>\n    <table>\n      <tr>\n        <td>\n          <b>companions</b>\n          <br>\n          <span id=\"companions\">None</span>\n        </td>\n        <td>\n          <b>desired bitrate</b>\n          <br>\n          <span id=\"desiredBitrate\">-1</span>\n        </td>\n        <td>\n          <b>duration</b><br><span id=\"duration\">-1</span>\n        </td>\n      </tr>\n      <tr>\n        <td>\n          <b>expanded</b><br><span id=\"expanded\">false</span>\n        </td>\n        <td><b>height</b><br><span id=\"height\">-1</span></td>\n        <td><b>icons</b><br><span id=\"icons\">None</span></td>\n      </tr>\n      <tr>\n        <td><b>linear</b><br><span id=\"linear\">True</span></td>\n        <td><b>remaining time</b><br><span id=\"remainingTime\">-1</span></td>\n        <td>\n          <b>skippable state</b><br>\n          <span id=\"skippableState\">False</span>\n        </td>\n      </tr>\n      <tr>\n        <td><b>volume</b><br><span id=\"volume\">1.0</span></td>\n        <td><b>view mode</b><br><span id=\"viewMode\">normal</span></td>\n        <td><b>width</b><br><span id=\"width\">5</span></td>\n      </tr>\n    </table>\n    <div>\n      <hr>\n      <div id=\"AdClickThruOptions\" style=\"display:none;\">\n        Click Through URL <input type=\"text\" id=\"clickThruUrl\" value=\"http://example.com\"/><br>\n        ID <input type=\"text\" id=\"clickThruId\" value=\"1\"/><br>\n        Player Handles <input type=\"text\" id=\"clickThruPlayerHandels\" value=\"false\"/><br>\n      </div>\n      <div id=\"AdErrorOptions\" style=\"display:none;\">\n        AdError <input type=\"text\" id=\"adErrorMsg\" value=\"ad error message\"/>\n      </div>\n      <div id=\"AdLogOptions\" style=\"display:none;\">\n        AdLog <input type=\"text\" id=\"adLogMsg\" value=\"ad log message\"/>\n      </div>\n      <div id=\"AdInteractionOptions\" style=\"display:none;\">\n        AdInteraction\n        <input type=\"text\" id=\"adInteractionId\" value=\"1\"/>\n      </div>\n    </div>\n    <h2><input type=\"button\" id=\"triggerEvent\" value=\"Trigger Event\"/></h2>\n  </div>\n  <div style=\"position:fixed; bottom:30px\">\n    Last event from player <input type=\"text\" style=\"width:200px\" id=\"lastVpaidEvent\" value=\"\"/>\n  </div>\n</div>";
+var htmlTemplate = "<div style=\"background:#f5f5f5; width:100%; height:100%\">\n  <div style=\"height: 100%; display: inline-block; float:left;\">\n    <select id=\"eventSelect\" size=\"10\">\n      <option value=\"AdStarted\" selected>AdStarted</option>\n      <option value=\"AdStopped\">AdStopped</option>\n      <option value=\"AdLoaded\">AdLoaded</option>\n      <option value=\"AdLinearChange\">AdLinearChange</option>\n      <option value=\"AdSizeChange\">AdSizeChange</option>\n      <option value=\"AdExpandedChange\">AdExpandedChange</option>\n      <option value=\"AdSkippableStateChange\">AdSkippableStateChange</option>\n      <option value=\"AdDurationChange\">AdDurationChange</option>\n      <option value=\"AdRemainingTimeChange\">AdRemainingTimeChange</option>\n      <option value=\"AdVolumeChange\">AdVolumeChange</option>\n      <option value=\"AdImpression\">AdImpression</option>\n      <option value=\"AdVideoStart\">AdVideoStart</option>\n      <option value=\"AdVideoFirstQuartile\">AdVideoFirstQuartile</option>\n      <option value=\"AdVideoMidpoint\">AdVideoMidpoint</option>\n      <option value=\"AdVideoThirdQuartile\">AdVideoThirdQuartile</option>\n      <option value=\"AdVideoComplete\">AdVideoComplete</option>\n      <option value=\"AdUserAcceptInvitation\">AdUserAcceptInvitation</option>\n      <option value=\"AdUserMinimize\">AdUserMinimize</option>\n      <option value=\"AdUserClose\">AdUserClose</option>\n      <option value=\"AdPaused\">AdPaused</option>\n      <option value=\"AdPlaying\">AdPlaying</option>\n      <option value=\"AdClickThru\">AdClickThru</option>\n      <option value=\"AdError\">AdError</option>\n      <option value=\"AdLog\">AdLog</option>\n      <option value=\"AdInteraction\">AdInteraction</option>\n    </select>\n  </div>\n  <div>\n    <table>\n      <tr>\n        <td>\n          <b>companions</b>\n          <br>\n          <span id=\"companions\">None</span>\n        </td>\n        <td>\n          <b>desired bitrate</b>\n          <br>\n          <span id=\"desiredBitrate\">-1</span>\n        </td>\n        <td>\n          <b>duration</b><br><span id=\"duration\">-1</span>\n        </td>\n      </tr>\n      <tr>\n        <td>\n          <b>expanded</b><br><span id=\"expanded\">false</span>\n        </td>\n        <td><b>height</b><br><span id=\"height\">-1</span></td>\n        <td><b>icons</b><br><span id=\"icons\">None</span></td>\n      </tr>\n      <tr>\n        <td><b>linear</b><br><span id=\"linear\">True</span></td>\n        <td><b>remaining time</b><br><span id=\"remainingTime\">-1</span></td>\n        <td>\n          <b>skippable state</b><br>\n          <span id=\"skippableState\">False</span>\n        </td>\n      </tr>\n      <tr>\n        <td><b>volume</b><br><span id=\"volume\">1.0</span></td>\n        <td><b>view mode</b><br><span id=\"viewMode\">normal</span></td>\n        <td><b>width</b><br><span id=\"width\">5</span></td>\n      </tr>\n    </table>\n    <div>\n      <hr>\n      <div id=\"AdClickThruOptions\" style=\"display:none;\">\n        Click Through URL <input type=\"text\" id=\"clickThruUrl\" value=\"http://example.com\"/><br>\n        ID <input type=\"text\" id=\"clickThruId\" value=\"1\"/><br>\n        Player Handles <input type=\"text\" id=\"clickThruPlayerHandels\" value=\"false\"/><br>\n      </div>\n      <div id=\"AdErrorOptions\" style=\"display:none;\">\n        AdError <input type=\"text\" id=\"adErrorMsg\" value=\"ad error message\"/>\n      </div>\n      <div id=\"AdLogOptions\" style=\"display:none;\">\n        AdLog <input type=\"text\" id=\"adLogMsg\" value=\"ad log message\"/>\n      </div>\n      <div id=\"AdInteractionOptions\" style=\"display:none;\">\n        AdInteraction\n        <input type=\"text\" id=\"adInteractionId\" value=\"1\"/>\n      </div>\n    </div>\n    <h2><input type=\"button\" id=\"triggerEvent\" value=\"Trigger Event\"/></h2>\n  </div>\n  <div style=\"position:fixed; bottom:30px\">\n    Last event from player <input type=\"text\" style=\"width:200px\" id=\"lastVpaidEvent\" value=\"\"/>\n  </div>\n</div>";
 
 var VpaidAdInspector = (function (_Linear) {
   _inherits(VpaidAdInspector, _Linear);
@@ -682,11 +680,10 @@ var VpaidAdInspector = (function (_Linear) {
   _createClass(VpaidAdInspector, [{
     key: 'initAd',
     value: function initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
-      this._attributes.size.width = this._attributes.width = width;
-      this._attributes.size.height = this._attributes.height = height;
+      this._attributes.width = width;
+      this._attributes.height = height;
       this._attributes.viewMode = viewMode;
       this._attributes.desiredBitrate = desiredBitrate;
-
       this._slot = environmentVars.slot;
       this._videoSlot = environmentVars.videoSlot;
 
@@ -701,8 +698,8 @@ var VpaidAdInspector = (function (_Linear) {
     value: function resizeAd(width, height, viewMode) {
       _get(Object.getPrototypeOf(VpaidAdInspector.prototype), 'resizeAd', this).call(this, width, height, viewMode);
       this.log('resizeAd ' + width + 'x' + height + ' ' + viewMode);
-      this._attributes.width = this._attributes.size.width = width;
-      this._attributes.height = this._attributes.size.height = height;
+      this._attributes.width = width;
+      this._attributes.height = height;
       this._attributes.viewMode = viewMode;
       this.fillProperties_();
       _trigger2.default.call(this, 'AdSizeChange');
@@ -712,6 +709,18 @@ var VpaidAdInspector = (function (_Linear) {
     value: function pauseAd() {
       _get(Object.getPrototypeOf(VpaidAdInspector.prototype), 'pauseAd', this).call(this);
       this.log('pauseAd');
+    }
+  }, {
+    key: 'expandAd',
+    value: function expandAd() {
+      _get(Object.getPrototypeOf(VpaidAdInspector.prototype), 'expandAd', this).call(this);
+      this.log('expandAd');
+    }
+  }, {
+    key: 'collapseAd',
+    value: function collapseAd() {
+      _get(Object.getPrototypeOf(VpaidAdInspector.prototype), 'collapseAd', this).call(this);
+      this.log('collapseAd');
     }
   }]);
 
@@ -729,7 +738,7 @@ VpaidAdInspector.prototype.renderSlot_ = function () {
     }
     document.body.appendChild(this._slot);
   }
-  this._slot.innerHTML = html;
+  this._slot.innerHTML = htmlTemplate;
 };
 
 /**
@@ -751,7 +760,11 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
   var eventSelect = document.getElementById('eventSelect');
   var value = eventSelect.value;
   if (value == 'AdClickThru') {
-    this.adClickThruHandler_();
+    var clickThruUrl = document.getElementById('clickThruUrl').value;
+    var clickThruId = document.getElementById('clickThruId').value;
+    var clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value;
+    this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')');
+    _trigger2.default.call(this, 'AdClickThru', [clickThruUrl, clickThruId, clickThruPlayerHandles]);
   } else if (value == 'AdError') {
     var adError = document.getElementById('adErrorMsg').value;
     this.log(value + '(' + adError + ')');
@@ -761,7 +774,9 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
     this.log(value + '(' + adLogMsg + ')');
     _trigger2.default.call(this, 'AdLog', [adLogMsg]);
   } else if (value == 'AdInteraction') {
-    this.adInteractionHandler_();
+    var adInteraction = document.getElementById('adInteractionId').value;
+    this.log(value + '(' + adInteraction + ')');
+    _trigger2.default.call(this, 'AdInteraction', [adInteraction]);
   } else {
     this.log(value + '()');
     _trigger2.default.call(this, value);
@@ -779,7 +794,6 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
  */
 
 VpaidAdInspector.prototype.log = function (message) {
-  console.info('Inspector log: ' + message);
   var logTextArea = document.getElementById('lastVpaidEvent');
   if (logTextArea != null) {
     logTextArea.value = message;
@@ -787,66 +801,10 @@ VpaidAdInspector.prototype.log = function (message) {
 };
 
 /**
-
- * Callback for AdClickThru button.
-
- *
-
- * @private
-
- */
-
-VpaidAdInspector.prototype.adClickThruHandler_ = function () {
-  if (!this.isEventSubscribed_('AdClickThru')) {
-    this.log('Error: AdClickThru function callback not subscribed.');
-    return;
-  }
-
-  var clickThruUrl = document.getElementById('clickThruUrl').value;
-
-  var clickThruId = document.getElementById('clickThruId').value;
-
-  var clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value;
-
-  this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')');
-
-  this._subscribers['AdClickThru'](clickThruUrl, clickThruId, clickThruPlayerHandles);
-};
-
-/**
-
- * Callback for AdInteraction button.
-
- *
-
- * @private
-
- */
-
-VpaidAdInspector.prototype.adInteractionHandler_ = function () {
-  if (!this.isEventSubscribed_('AdInteraction')) {
-    this.log('Error: AdInteraction function callback not subscribed.');
-
-    return;
-  }
-
-  var adInteraction = document.getElementById('adInteractionId').value;
-
-  this.log('adLog(' + adInteraction + ')');
-
-  this._subscribers['AdInteraction'](adInteraction);
-};
-
-/**
-
  * Callback function when an event is selected from the dropdown.
-
  *
-
  * @private
-
  */
-
 VpaidAdInspector.prototype.eventSelected_ = function () {
   var clickThruParams = document.getElementById('AdClickThruOptions');
   var adErrorParams = document.getElementById('AdErrorOptions');
@@ -856,9 +814,7 @@ VpaidAdInspector.prototype.eventSelected_ = function () {
   adErrorParams.style.display = 'none';
   adLogParams.style.display = 'none';
   adInteractionParams.style.display = 'none';
-
   var eventSelect = document.getElementById('eventSelect');
-
   var value = eventSelect.value;
   if (value == 'AdClickThru') {
     clickThruParams.style.display = 'inline';
@@ -872,24 +828,10 @@ VpaidAdInspector.prototype.eventSelected_ = function () {
 };
 
 /**
- * @param {string} eventName
- * @return {Boolean} True if this._subscribers contains the callback.
- * @private
- */
-VpaidAdInspector.prototype.isEventSubscribed_ = function (eventName) {
-  return typeof this._subscribers[eventName] === 'function';
-};
-
-/**
-
  * Populates all of the vpaid ad properties.
-
  *
-
  * @private
-
  */
-
 VpaidAdInspector.prototype.fillProperties_ = function () {
   for (var key in this._attributes) {
     if (key && document.getElementById(key)) {
