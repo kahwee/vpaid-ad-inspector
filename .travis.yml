@@ -5,5 +5,8 @@ node_js:
 cache:
   directories:
     - node_modules
+deploy:
+  skip_cleanup: true
 after_success:
+  - gem install dpl
   - dpl --provider=s3 --access-key-id=$S3_ACCESS_KEY_ID --secret-access-key=$S3_SECRET_ACCESS_KEY --bucket=vpaid-ad-inspector --region=us-east-1 --acl=public_read --local-dir dist
