@@ -8,7 +8,7 @@
     "uglify": "uglifyjs dist/vpaid-ad-inspector.js -o dist/vpaid-ad-inspector.min.js -c -m --screw-ie8",
     "build": "npm run browserify && npm run uglify",
     "watchify": "watchify src/index.js -o dist/vpaid-ad-inspector.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ."
   },
   "dependencies": {
     "vpaid-ad": "^1.0.4"
@@ -21,6 +21,7 @@
     "brfs": "^1.4.1",
     "browserify": "^12.0.1",
     "gulp": "^3.9.0",
+    "mocha": "^2.3.4",
     "uglify-js": "^2.6.1"
   },
   "browserify": {
