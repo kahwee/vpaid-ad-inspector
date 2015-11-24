@@ -6,28 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function () {
-  var clickThru = this._parameters.clickThru || {
-    url: 'http://www.example.com',
-    trackID: 123,
-    playerHandles: false
-  };
-
-  $trigger.call(this, 'AdClickThru', [clickThru.url, clickThru.trackID, clickThru.playerHandles]);
-
-  // Babel 6 can'mt seem to compile this
-  // if (!clickThru.playerHandles) {
-  //   window.open(clickThru.url, '_blank')
-  // }
-};
-
-},{}],2:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function () {
   if (this._destroyed) return;
 
   _toggles.$removeAll.call(this);
@@ -42,7 +20,7 @@ var _toggles = require('../toggles');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../toggles":5,"../trigger":6}],3:[function(require,module,exports){
+},{"../toggles":4,"../trigger":5}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -72,18 +50,22 @@ var _trigger2 = _interopRequireDefault(_trigger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../trigger":6}],4:[function(require,module,exports){
+function _normNumber(start, end, value) {
+  return (value - start) / (end - start);
+}
+
+function _mapNumber(fromStart, fromEnd, toStart, toEnd, value) {
+  return toStart + (toEnd - toStart) * _normNumber(fromStart, fromEnd, value);
+}
+
+},{"../trigger":5}],3:[function(require,module,exports){
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })(); // import $onClickThru from './handler/click-thru'
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _clickThru = require('./handler/click-thru');
-
-var _clickThru2 = _interopRequireDefault(_clickThru);
 
 var _loadCss = require('./util/load-css');
 
@@ -121,7 +103,7 @@ function $setVideoAd() {
   if (!videoSlot) {
     return $throwError.call(this, 'no video');
   }
-  _setSize(videoSlot, this._attributes.size);
+  _setSize(videoSlot, [this._attributes.width, this._attributes.height]);
 
   if (!_setSupportedVideo(videoSlot, this._parameters.videos || [])) {
     return $throwError.call(this, 'no supported video found');
@@ -129,10 +111,10 @@ function $setVideoAd() {
 }
 
 function _setSize(el, size) {
-  el.setAttribute('width', size.width);
-  el.setAttribute('height', size.height);
-  el.style.width = size.width + 'px';
-  el.style.height = size.height + 'px';
+  el.setAttribute('width', size[0]);
+  el.setAttribute('height', size[1]);
+  el.style.width = size[0] + 'px';
+  el.style.height = size[1] + 'px';
 }
 
 function _setSupportedVideo(videoEl, videos) {
@@ -147,20 +129,12 @@ function _setSupportedVideo(videoEl, videos) {
   return true;
 }
 
-function _createAndAppend(parent, tagName, className) {
-  var el = document.createElement(tagName || 'div');
-  el.className = className || '';
-  parent.appendChild(el);
-  return el;
-}
-
-function _normNumber(start, end, value) {
-  return (value - start) / (end - start);
-}
-
-function _mapNumber(fromStart, fromEnd, toStart, toEnd, value) {
-  return toStart + (toEnd - toStart) * _normNumber(fromStart, fromEnd, value);
-}
+// function _createAndAppend (parent, tagName, className) {
+//   var el = document.createElement(tagName || 'div')
+//   el.className = className || ''
+//   parent.appendChild(el)
+//   return el
+// }
 
 var Linear = (function () {
   function Linear() {
@@ -175,18 +149,15 @@ var Linear = (function () {
       companions: '',
       desiredBitrate: 256,
       duration: 30,
+      remainingTime: -1,
       expanded: false,
       icons: '',
       linear: true,
-      remainingTime: 10,
       skippableState: false,
       viewMode: 'normal',
       width: 0,
-      volume: 1.0,
-      size: {
-        height: 0,
-        width: 0
-      }
+      height: 0,
+      volume: 1.0
     };
 
     // open interactive panel -> AdExpandedChange, AdInteraction
@@ -237,21 +208,14 @@ var Linear = (function () {
   }, {
     key: 'initAd',
     value: function initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
-      this._attributes.size.width = width;
-      this._attributes.size.height = height;
+      this._attributes.width = width;
+      this._attributes.height = height;
       this._attributes.viewMode = viewMode;
       this._attributes.desiredBitrate = desiredBitrate;
 
       this._slot = environmentVars.slot;
       this._videoSlot = environmentVars.videoSlot;
       this._style = (0, _loadCss2.default)('ad.css');
-
-      try {
-        this._parameters = JSON.parse(creativeData.AdParameters);
-      } catch (e) {
-        return $throwError('failed to parse creativeData.AdParameters, mandatory for this ad');
-      }
-
       $setVideoAd.call(this);
       this._videoSlot.addEventListener('timeupdate', _vastTimeupdate2.default.bind(this), false);
       this._videoSlot.addEventListener('ended', _vastEnded2.default.bind(this), false);
@@ -303,7 +267,6 @@ var Linear = (function () {
     value: function skipAd() {
       if (this._destroyed) return;
       if (!this._attributes.skippableState) return;
-
       _toggles.$removeAll.call(this);
       _trigger2.default.call(this, 'AdSkipped');
       _trigger2.default.call(this, 'AdStopped');
@@ -320,8 +283,10 @@ var Linear = (function () {
   }, {
     key: 'resizeAd',
     value: function resizeAd(width, height, viewMode) {
-      console.log('Resize has been called but nothing is implemented');
-      // TODO
+      this._attributes.width = width;
+      this._attributes.height = height;
+      this._attributes.viewMode = viewMode;
+      _trigger2.default.call(this, 'AdSizeChange');
     }
 
     /**
@@ -355,8 +320,9 @@ var Linear = (function () {
 
   }, {
     key: 'expandAd',
-    value: function expandAd() {}
-    // You should implement this
+    value: function expandAd() {
+      _trigger2.default.call(this, 'AdExpandedChange');
+    }
 
     /**
      * collapseAd
@@ -365,8 +331,9 @@ var Linear = (function () {
 
   }, {
     key: 'collapseAd',
-    value: function collapseAd() {}
-    // TODO
+    value: function collapseAd() {
+      _trigger2.default.call(this, 'AdExpandedChange');
+    }
 
     /**
      * subscribe
@@ -473,7 +440,9 @@ var Linear = (function () {
 
   }, {
     key: 'getAdRemainingTime',
-    value: function getAdRemainingTime() {}
+    value: function getAdRemainingTime() {
+      return this._attributes.remainingTime;
+    }
 
     /**
      * getAdDuration
@@ -536,6 +505,7 @@ var Linear = (function () {
         return $throwError('volume is not valid');
       }
       this._videoSlot.volume = this._attributes.volume = volume;
+      _trigger2.default.call(this, 'AdVolumeChange');
     }
   }]);
 
@@ -544,7 +514,7 @@ var Linear = (function () {
 
 exports.default = Linear;
 
-},{"./handler/click-thru":1,"./handler/vast-ended":2,"./handler/vast-timeupdate":3,"./toggles":5,"./trigger":6,"./util/load-css":7}],5:[function(require,module,exports){
+},{"./handler/vast-ended":1,"./handler/vast-timeupdate":2,"./toggles":4,"./trigger":5,"./util/load-css":6}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -597,7 +567,7 @@ function $removeAll() {
   this._ui = null;
 }
 
-},{"./trigger":6}],6:[function(require,module,exports){
+},{"./trigger":5}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -611,7 +581,7 @@ exports.default = function (event, msg) {
   });
 };
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -627,7 +597,7 @@ exports.default = function (url) {
   return link;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 var _linear = require('./linear');
@@ -637,10 +607,10 @@ var _linear2 = _interopRequireDefault(_linear);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.getVPAIDAd = function () {
-	return new _linear2.default();
+  return new _linear2.default();
 };
 
-},{"./linear":9}],9:[function(require,module,exports){
+},{"./linear":8}],8:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -761,21 +731,21 @@ VpaidAdInspector.prototype.addButtonListeners_ = function () {
 VpaidAdInspector.prototype.triggerEvent_ = function () {
   var eventSelect = document.getElementById('eventSelect');
   var value = eventSelect.value;
-  if (value == 'AdClickThru') {
+  if (value === 'AdClickThru') {
     var clickThruUrl = document.getElementById('clickThruUrl').value;
     var clickThruId = document.getElementById('clickThruId').value;
     var clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value;
     this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')');
     _trigger2.default.call(this, 'AdClickThru', [clickThruUrl, clickThruId, clickThruPlayerHandles]);
-  } else if (value == 'AdError') {
+  } else if (value === 'AdError') {
     var adError = document.getElementById('adErrorMsg').value;
     this.log(value + '(' + adError + ')');
     _trigger2.default.call(this, 'AdError', [adError]);
-  } else if (value == 'AdLog') {
+  } else if (value === 'AdLog') {
     var adLogMsg = document.getElementById('adLogMsg').value;
     this.log(value + '(' + adLogMsg + ')');
     _trigger2.default.call(this, 'AdLog', [adLogMsg]);
-  } else if (value == 'AdInteraction') {
+  } else if (value === 'AdInteraction') {
     var adInteraction = document.getElementById('adInteractionId').value;
     this.log(value + '(' + adInteraction + ')');
     _trigger2.default.call(this, 'AdInteraction', [adInteraction]);
@@ -786,15 +756,10 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
 };
 
 /**
-
  * Logs events and messages.
-
  *
-
  * @param {string} message
-
  */
-
 VpaidAdInspector.prototype.log = function (message) {
   var logTextArea = document.getElementById('lastVpaidEvent');
   if (logTextArea != null) {
@@ -818,13 +783,13 @@ VpaidAdInspector.prototype.eventSelected_ = function () {
   adInteractionParams.style.display = 'none';
   var eventSelect = document.getElementById('eventSelect');
   var value = eventSelect.value;
-  if (value == 'AdClickThru') {
+  if (value === 'AdClickThru') {
     clickThruParams.style.display = 'inline';
-  } else if (value == 'AdError') {
+  } else if (value === 'AdError') {
     adErrorParams.style.display = 'inline';
-  } else if (value == 'AdLog') {
+  } else if (value === 'AdLog') {
     adLogParams.style.display = 'inline';
-  } else if (value == 'AdInteraction') {
+  } else if (value === 'AdInteraction') {
     adInteractionParams.style.display = 'inline';
   }
 };
@@ -842,4 +807,4 @@ VpaidAdInspector.prototype.fillProperties_ = function () {
   }
 };
 
-},{"vpaid-ad/src/linear":4,"vpaid-ad/src/trigger":6}]},{},[8]);
+},{"vpaid-ad/src/linear":3,"vpaid-ad/src/trigger":5}]},{},[7]);

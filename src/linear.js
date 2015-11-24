@@ -60,7 +60,6 @@ VpaidAdInspector.prototype.renderSlot_ = function () {
   this._slot.innerHTML = htmlTemplate
 }
 
-
 /**
  * Adds all listeners to buttons.
  * @private
@@ -72,7 +71,6 @@ VpaidAdInspector.prototype.addButtonListeners_ = function () {
   triggerEvent.addEventListener('click', this.triggerEvent_.bind(this))
 }
 
-
 /**
  * Triggers an event.
  * @private
@@ -80,7 +78,7 @@ VpaidAdInspector.prototype.addButtonListeners_ = function () {
 VpaidAdInspector.prototype.triggerEvent_ = function () {
   var eventSelect = document.getElementById('eventSelect')
   var value = eventSelect.value
-  if (value == 'AdClickThru') {
+  if (value === 'AdClickThru') {
     const clickThruUrl = document.getElementById('clickThruUrl').value
     const clickThruId = document.getElementById('clickThruId').value
     const clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value
@@ -90,15 +88,15 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
       clickThruId,
       clickThruPlayerHandles
     ])
-  } else if (value == 'AdError') {
+  } else if (value === 'AdError') {
     const adError = document.getElementById('adErrorMsg').value
     this.log(`${value}(${adError})`)
     $trigger.call(this, 'AdError', [adError])
-  } else if (value == 'AdLog') {
+  } else if (value === 'AdLog') {
     const adLogMsg = document.getElementById('adLogMsg').value
     this.log(`${value}(${adLogMsg})`)
     $trigger.call(this, 'AdLog', [adLogMsg])
-  } else if (value == 'AdInteraction') {
+  } else if (value === 'AdInteraction') {
     const adInteraction = document.getElementById('adInteractionId').value
     this.log(`${value}(${adInteraction})`)
     $trigger.call(this, 'AdInteraction', [adInteraction])
@@ -108,17 +106,11 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
   }
 }
 
-
 /**
-
  * Logs events and messages.
-
  *
-
  * @param {string} message
-
  */
-
 VpaidAdInspector.prototype.log = function (message) {
   const logTextArea = document.getElementById('lastVpaidEvent')
   if (logTextArea != null) {
@@ -142,13 +134,13 @@ VpaidAdInspector.prototype.eventSelected_ = function () {
   adInteractionParams.style.display = 'none'
   var eventSelect = document.getElementById('eventSelect')
   var value = eventSelect.value
-  if (value == 'AdClickThru') {
+  if (value === 'AdClickThru') {
     clickThruParams.style.display = 'inline'
-  } else if (value == 'AdError') {
+  } else if (value === 'AdError') {
     adErrorParams.style.display = 'inline'
-  } else if (value == 'AdLog') {
+  } else if (value === 'AdLog') {
     adLogParams.style.display = 'inline'
-  } else if (value == 'AdInteraction') {
+  } else if (value === 'AdInteraction') {
     adInteractionParams.style.display = 'inline'
   }
 }
