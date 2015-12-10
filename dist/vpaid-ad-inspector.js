@@ -151,7 +151,7 @@ var Linear = (function () {
       duration: 30,
       remainingTime: -1,
       expanded: false,
-      icons: '',
+      icons: false,
       linear: true,
       skippableState: false,
       viewMode: 'normal',
