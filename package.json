@@ -51,5 +51,14 @@
   "bugs": {
     "url": "https://github.com/kahwee/vpaid-ad-inspector/issues"
   },
-  "homepage": "https://github.com/kahwee/vpaid-ad-inspector#readme"
+  "homepage": "https://github.com/kahwee/vpaid-ad-inspector#readme",
+  "keywords": [
+    "vpaid",
+    "ad",
+    "adtech",
+    "vast",
+    "debugging",
+    "advertisement",
+    "unit"
+  ]
 }
