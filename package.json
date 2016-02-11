@@ -4,7 +4,7 @@
   "description": "Simple VPAID ad to inspect",
   "main": "index.js",
   "scripts": {
-    "lint": "standard src",
+    "lint": "standard src/**/*.js",
     "browserify": "browserify src/index.js -o dist/vpaid-ad-inspector.js",
     "uglify": "uglifyjs dist/vpaid-ad-inspector.js -o dist/vpaid-ad-inspector.min.js -c -m --screw-ie8",
     "build": "npm run lint && npm run browserify && npm run uglify",

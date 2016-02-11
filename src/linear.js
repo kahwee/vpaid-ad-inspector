@@ -1,7 +1,8 @@
 import Linear from 'vpaid-ad/src/linear'
 import $trigger from 'vpaid-ad/src/trigger'
+const path = require('path')
 const fs = require('fs')
-const htmlTemplate = fs.readFileSync(__dirname + '/harness.html', {
+const htmlTemplate = fs.readFileSync(path.join(__dirname, 'harness.html'), {
   encoding: 'utf8'
 })
 
