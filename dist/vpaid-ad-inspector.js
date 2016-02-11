@@ -1,4 +1,45 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/* eslint-disable no-unused-vars */
+'use strict';
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+module.exports = Object.assign || function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (Object.getOwnPropertySymbols) {
+			symbols = Object.getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
+},{}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20,7 +61,7 @@ var _toggles = require('../toggles');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../toggles":4,"../trigger":5}],2:[function(require,module,exports){
+},{"../toggles":5,"../trigger":6}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -58,14 +99,14 @@ function _mapNumber(fromStart, fromEnd, toStart, toEnd, value) {
   return toStart + (toEnd - toStart) * _normNumber(fromStart, fromEnd, value);
 }
 
-},{"../trigger":5}],3:[function(require,module,exports){
+},{"../trigger":6}],4:[function(require,module,exports){
 'use strict';
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })(); // import $onClickThru from './handler/click-thru'
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _loadCss = require('./util/load-css');
 
@@ -84,6 +125,10 @@ var _vastEnded2 = _interopRequireDefault(_vastEnded);
 var _vastTimeupdate = require('./handler/vast-timeupdate');
 
 var _vastTimeupdate2 = _interopRequireDefault(_vastTimeupdate);
+
+var _objectAssign = require('object-assign');
+
+var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -136,7 +181,7 @@ function _setSupportedVideo(videoEl, videos) {
 //   return el
 // }
 
-var Linear = (function () {
+var Linear = function () {
   function Linear() {
     _classCallCheck(this, Linear);
 
@@ -160,6 +205,8 @@ var Linear = (function () {
       volume: 1.0
     };
 
+    this.previousAttributes = (0, _objectAssign2.default)({}, this._attributes);
+
     // open interactive panel -> AdExpandedChange, AdInteraction
     // when close panel -> AdExpandedChange, AdInteraction
 
@@ -170,17 +217,24 @@ var Linear = (function () {
     this._parameters = {};
   }
 
-  /**
-   * The video player calls handshakeVersion immediately after loading the ad unit to indicate to the ad unit that VPAID will be used.
-   * The video player passes in its latest VPAID version string.
-   * The ad unit returns a version string minimally set to “1.0”, and of the form “major.minor.patch” (i.e. “2.1.05”).
-   * The video player must verify that it supports the particular version of VPAID or cancel the ad.
-   *
-   * @param {string} playerVPAIDVersion
-   * @return {string} adUnit VPAID version format 'major.minor.patch' minimum '1.0'
-   */
-
   _createClass(Linear, [{
+    key: 'set',
+    value: function set(attribute, newValue) {
+      this.previousAttributes[attribute] = this._attributes[attribute];
+      this._attributes[attribute] = newValue;
+    }
+
+    /**
+     * The video player calls handshakeVersion immediately after loading the ad unit to indicate to the ad unit that VPAID will be used.
+     * The video player passes in its latest VPAID version string.
+     * The ad unit returns a version string minimally set to “1.0”, and of the form “major.minor.patch” (i.e. “2.1.05”).
+     * The video player must verify that it supports the particular version of VPAID or cancel the ad.
+     *
+     * @param {string} playerVPAIDVersion
+     * @return {string} adUnit VPAID version format 'major.minor.patch' minimum '1.0'
+     */
+
+  }, {
     key: 'handshakeVersion',
     value: function handshakeVersion(playerVPAIDVersion) {
       return '2.0';
@@ -321,6 +375,7 @@ var Linear = (function () {
   }, {
     key: 'expandAd',
     value: function expandAd() {
+      this.set('expanded', true);
       _trigger2.default.call(this, 'AdExpandedChange');
     }
 
@@ -332,6 +387,7 @@ var Linear = (function () {
   }, {
     key: 'collapseAd',
     value: function collapseAd() {
+      this.set('expanded', false);
       _trigger2.default.call(this, 'AdExpandedChange');
     }
 
@@ -501,20 +557,25 @@ var Linear = (function () {
   }, {
     key: 'setAdVolume',
     value: function setAdVolume(volume) {
+      if (this.previousAttributes.volume === volume) {
+        // no change, no fire
+        return;
+      }
       if (volume < 0 || volume > 1) {
         return $throwError('volume is not valid');
       }
-      this._videoSlot.volume = this._attributes.volume = volume;
+      this.set('volume', volume);
+      this._videoSlot.volume = volume;
       _trigger2.default.call(this, 'AdVolumeChange');
     }
   }]);
 
   return Linear;
-})();
+}();
 
 exports.default = Linear;
 
-},{"./handler/vast-ended":1,"./handler/vast-timeupdate":2,"./toggles":4,"./trigger":5,"./util/load-css":6}],4:[function(require,module,exports){
+},{"./handler/vast-ended":2,"./handler/vast-timeupdate":3,"./toggles":5,"./trigger":6,"./util/load-css":7,"object-assign":1}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -567,7 +628,7 @@ function $removeAll() {
   this._ui = null;
 }
 
-},{"./trigger":5}],5:[function(require,module,exports){
+},{"./trigger":6}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -581,7 +642,7 @@ exports.default = function (event, msg) {
   });
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -597,7 +658,7 @@ exports.default = function (url) {
   return link;
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var _linear = require('./linear');
@@ -610,16 +671,16 @@ window.getVPAIDAd = function () {
   return new _linear2.default();
 };
 
-},{"./linear":8}],8:[function(require,module,exports){
+},{"./linear":9}],9:[function(require,module,exports){
 'use strict';
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _linear = require('vpaid-ad/src/linear');
 
@@ -640,7 +701,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var htmlTemplate = "<div style=\"background:#f5f5f5; width:100%; height:100%\">\n  <div style=\"height: 100%; display: inline-block; float:left;\">\n    <select id=\"eventSelect\" size=\"10\">\n      <option value=\"AdStarted\" selected>AdStarted</option>\n      <option value=\"AdStopped\">AdStopped</option>\n      <option value=\"AdLoaded\">AdLoaded</option>\n      <option value=\"AdLinearChange\">AdLinearChange</option>\n      <option value=\"AdSizeChange\">AdSizeChange</option>\n      <option value=\"AdExpandedChange\">AdExpandedChange</option>\n      <option value=\"AdSkippableStateChange\">AdSkippableStateChange</option>\n      <option value=\"AdDurationChange\">AdDurationChange</option>\n      <option value=\"AdRemainingTimeChange\">AdRemainingTimeChange</option>\n      <option value=\"AdVolumeChange\">AdVolumeChange</option>\n      <option value=\"AdImpression\">AdImpression</option>\n      <option value=\"AdVideoStart\">AdVideoStart</option>\n      <option value=\"AdVideoFirstQuartile\">AdVideoFirstQuartile</option>\n      <option value=\"AdVideoMidpoint\">AdVideoMidpoint</option>\n      <option value=\"AdVideoThirdQuartile\">AdVideoThirdQuartile</option>\n      <option value=\"AdVideoComplete\">AdVideoComplete</option>\n      <option value=\"AdUserAcceptInvitation\">AdUserAcceptInvitation</option>\n      <option value=\"AdUserMinimize\">AdUserMinimize</option>\n      <option value=\"AdUserClose\">AdUserClose</option>\n      <option value=\"AdPaused\">AdPaused</option>\n      <option value=\"AdPlaying\">AdPlaying</option>\n      <option value=\"AdClickThru\">AdClickThru</option>\n      <option value=\"AdError\">AdError</option>\n      <option value=\"AdLog\">AdLog</option>\n      <option value=\"AdInteraction\">AdInteraction</option>\n    </select>\n  </div>\n  <div>\n    <table>\n      <tr>\n        <td>\n          <b>companions</b>\n          <br>\n          <span id=\"companions\">None</span>\n        </td>\n        <td>\n          <b>desired bitrate</b>\n          <br>\n          <span id=\"desiredBitrate\">-1</span>\n        </td>\n        <td>\n          <b>duration</b><br><span id=\"duration\">-1</span>\n        </td>\n      </tr>\n      <tr>\n        <td>\n          <b>expanded</b><br><span id=\"expanded\">false</span>\n        </td>\n        <td><b>height</b><br><span id=\"height\">-1</span></td>\n        <td><b>icons</b><br><span id=\"icons\">None</span></td>\n      </tr>\n      <tr>\n        <td><b>linear</b><br><span id=\"linear\">True</span></td>\n        <td><b>remaining time</b><br><span id=\"remainingTime\">-1</span></td>\n        <td>\n          <b>skippable state</b><br>\n          <span id=\"skippableState\">False</span>\n        </td>\n      </tr>\n      <tr>\n        <td><b>volume</b><br><span id=\"volume\">1.0</span></td>\n        <td><b>view mode</b><br><span id=\"viewMode\">normal</span></td>\n        <td><b>width</b><br><span id=\"width\">5</span></td>\n      </tr>\n    </table>\n    <div>\n      <hr>\n      <div id=\"AdClickThruOptions\" style=\"display:none;\">\n        Click Through URL <input type=\"text\" id=\"clickThruUrl\" value=\"http://example.com\"/><br>\n        ID <input type=\"text\" id=\"clickThruId\" value=\"1\"/><br>\n        Player Handles <input type=\"text\" id=\"clickThruPlayerHandels\" value=\"false\"/><br>\n      </div>\n      <div id=\"AdErrorOptions\" style=\"display:none;\">\n        AdError <input type=\"text\" id=\"adErrorMsg\" value=\"ad error message\"/>\n      </div>\n      <div id=\"AdLogOptions\" style=\"display:none;\">\n        AdLog <input type=\"text\" id=\"adLogMsg\" value=\"ad log message\"/>\n      </div>\n      <div id=\"AdInteractionOptions\" style=\"display:none;\">\n        AdInteraction\n        <input type=\"text\" id=\"adInteractionId\" value=\"1\"/>\n      </div>\n    </div>\n    <h2><input type=\"button\" id=\"triggerEvent\" value=\"Trigger Event\"/></h2>\n  </div>\n  <div style=\"position:fixed; bottom:30px\">\n    Last event from player <input type=\"text\" style=\"width:200px\" id=\"lastVpaidEvent\" value=\"\"/>\n  </div>\n</div>";
 
-var VpaidAdInspector = (function (_Linear) {
+var VpaidAdInspector = function (_Linear) {
   _inherits(VpaidAdInspector, _Linear);
 
   function VpaidAdInspector() {
@@ -697,9 +758,10 @@ var VpaidAdInspector = (function (_Linear) {
   }]);
 
   return VpaidAdInspector;
-})(_linear2.default);
+}(_linear2.default);
 
 exports.default = VpaidAdInspector;
+
 
 VpaidAdInspector.prototype.renderSlot_ = function () {
   var slotExists = this._slot && this._slot.tagName === 'DIV';
@@ -807,4 +869,4 @@ VpaidAdInspector.prototype.fillProperties_ = function () {
   }
 };
 
-},{"vpaid-ad/src/linear":3,"vpaid-ad/src/trigger":5}]},{},[7]);
+},{"vpaid-ad/src/linear":4,"vpaid-ad/src/trigger":6}]},{},[8]);
