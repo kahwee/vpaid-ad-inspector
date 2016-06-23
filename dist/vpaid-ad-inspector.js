@@ -1,45 +1,353 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* eslint-disable no-unused-vars */
-'use strict';
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+(function (process){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-function toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
 
-	return Object(val);
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
 }
 
-module.exports = Object.assign || function (target, source) {
-	var from;
-	var to = toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (Object.getOwnPropertySymbols) {
-			symbols = Object.getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
+// Split a filename into [root, dir, basename, ext], unix version
+// 'root' is just a slash, or nothing.
+var splitPathRe =
+    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+var splitPath = function(filename) {
+  return splitPathRe.exec(filename).slice(1);
 };
 
-},{}],2:[function(require,module,exports){
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments[i] : process.cwd();
+
+    // Skip empty and invalid entries
+    if (typeof path !== 'string') {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+  var isAbsolute = exports.isAbsolute(path),
+      trailingSlash = substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isAbsolute ? '/' : '') + path;
+};
+
+// posix version
+exports.isAbsolute = function(path) {
+  return path.charAt(0) === '/';
+};
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(filter(paths, function(p, index) {
+    if (typeof p !== 'string') {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+};
+
+
+// path.relative(from, to)
+// posix version
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+exports.delimiter = ':';
+
+exports.dirname = function(path) {
+  var result = splitPath(path),
+      root = result[0],
+      dir = result[1];
+
+  if (!root && !dir) {
+    // No dirname whatsoever
+    return '.';
+  }
+
+  if (dir) {
+    // It has a dirname, strip trailing slash
+    dir = dir.substr(0, dir.length - 1);
+  }
+
+  return root + dir;
+};
+
+
+exports.basename = function(path, ext) {
+  var f = splitPath(path)[2];
+  // TODO: make this comparison case-insensitive on windows?
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+
+exports.extname = function(path) {
+  return splitPath(path)[3];
+};
+
+function filter (xs, f) {
+    if (xs.filter) return xs.filter(f);
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (f(xs[i], i, xs)) res.push(xs[i]);
+    }
+    return res;
+}
+
+// String.prototype.substr - negative index don't work in IE8
+var substr = 'ab'.substr(-1) === 'b'
+    ? function (str, start, len) { return str.substr(start, len) }
+    : function (str, start, len) {
+        if (start < 0) start = str.length + start;
+        return str.substr(start, len);
+    }
+;
+
+}).call(this,require('_process'))
+},{"_process":2}],2:[function(require,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+(function () {
+  try {
+    cachedSetTimeout = setTimeout;
+  } catch (e) {
+    cachedSetTimeout = function () {
+      throw new Error('setTimeout is not defined');
+    }
+  }
+  try {
+    cachedClearTimeout = clearTimeout;
+  } catch (e) {
+    cachedClearTimeout = function () {
+      throw new Error('clearTimeout is not defined');
+    }
+  }
+} ())
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = cachedSetTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    cachedClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        cachedSetTimeout(drainQueue, 0);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -61,7 +369,7 @@ var _toggles = require('../toggles');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../toggles":5,"../trigger":6}],3:[function(require,module,exports){
+},{"../toggles":6,"../trigger":7}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -99,12 +407,14 @@ function _mapNumber(fromStart, fromEnd, toStart, toEnd, value) {
   return toStart + (toEnd - toStart) * _normNumber(fromStart, fromEnd, value);
 }
 
-},{"../trigger":6}],4:[function(require,module,exports){
+},{"../trigger":7}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -125,10 +435,6 @@ var _vastEnded2 = _interopRequireDefault(_vastEnded);
 var _vastTimeupdate = require('./handler/vast-timeupdate');
 
 var _vastTimeupdate2 = _interopRequireDefault(_vastTimeupdate);
-
-var _objectAssign = require('object-assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -205,7 +511,7 @@ var Linear = function () {
       volume: 1.0
     };
 
-    this.previousAttributes = (0, _objectAssign2.default)({}, this._attributes);
+    this.previousAttributes = _extends({}, this._attributes);
 
     // open interactive panel -> AdExpandedChange, AdInteraction
     // when close panel -> AdExpandedChange, AdInteraction
@@ -575,7 +881,7 @@ var Linear = function () {
 
 exports.default = Linear;
 
-},{"./handler/vast-ended":2,"./handler/vast-timeupdate":3,"./toggles":5,"./trigger":6,"./util/load-css":7,"object-assign":1}],5:[function(require,module,exports){
+},{"./handler/vast-ended":3,"./handler/vast-timeupdate":4,"./toggles":6,"./trigger":7,"./util/load-css":8}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -628,7 +934,7 @@ function $removeAll() {
   this._ui = null;
 }
 
-},{"./trigger":6}],6:[function(require,module,exports){
+},{"./trigger":7}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -642,7 +948,7 @@ exports.default = function (event, msg) {
   });
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -658,7 +964,7 @@ exports.default = function (url) {
   return link;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 var _linear = require('./linear');
@@ -671,7 +977,7 @@ window.getVPAIDAd = function () {
   return new _linear2.default();
 };
 
-},{"./linear":9}],9:[function(require,module,exports){
+},{"./linear":10}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -698,6 +1004,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var path = require('path');
 
 var htmlTemplate = "<div style=\"background:#f5f5f5; width:100%; height:100%\">\n  <div style=\"height: 100%; display: inline-block; float:left;\">\n    <select id=\"eventSelect\" size=\"10\">\n      <option value=\"AdStarted\" selected>AdStarted</option>\n      <option value=\"AdStopped\">AdStopped</option>\n      <option value=\"AdLoaded\">AdLoaded</option>\n      <option value=\"AdLinearChange\">AdLinearChange</option>\n      <option value=\"AdSizeChange\">AdSizeChange</option>\n      <option value=\"AdExpandedChange\">AdExpandedChange</option>\n      <option value=\"AdSkippableStateChange\">AdSkippableStateChange</option>\n      <option value=\"AdDurationChange\">AdDurationChange</option>\n      <option value=\"AdRemainingTimeChange\">AdRemainingTimeChange</option>\n      <option value=\"AdVolumeChange\">AdVolumeChange</option>\n      <option value=\"AdImpression\">AdImpression</option>\n      <option value=\"AdVideoStart\">AdVideoStart</option>\n      <option value=\"AdVideoFirstQuartile\">AdVideoFirstQuartile</option>\n      <option value=\"AdVideoMidpoint\">AdVideoMidpoint</option>\n      <option value=\"AdVideoThirdQuartile\">AdVideoThirdQuartile</option>\n      <option value=\"AdVideoComplete\">AdVideoComplete</option>\n      <option value=\"AdUserAcceptInvitation\">AdUserAcceptInvitation</option>\n      <option value=\"AdUserMinimize\">AdUserMinimize</option>\n      <option value=\"AdUserClose\">AdUserClose</option>\n      <option value=\"AdPaused\">AdPaused</option>\n      <option value=\"AdPlaying\">AdPlaying</option>\n      <option value=\"AdClickThru\">AdClickThru</option>\n      <option value=\"AdError\">AdError</option>\n      <option value=\"AdLog\">AdLog</option>\n      <option value=\"AdInteraction\">AdInteraction</option>\n    </select>\n  </div>\n  <div>\n    <table>\n      <tr>\n        <td>\n          <b>companions</b>\n          <br>\n          <span id=\"companions\">None</span>\n        </td>\n        <td>\n          <b>desired bitrate</b>\n          <br>\n          <span id=\"desiredBitrate\">-1</span>\n        </td>\n        <td>\n          <b>duration</b><br><span id=\"duration\">-1</span>\n        </td>\n      </tr>\n      <tr>\n        <td>\n          <b>expanded</b><br><span id=\"expanded\">false</span>\n        </td>\n        <td><b>height</b><br><span id=\"height\">-1</span></td>\n        <td><b>icons</b><br><span id=\"icons\">None</span></td>\n      </tr>\n      <tr>\n        <td><b>linear</b><br><span id=\"linear\">True</span></td>\n        <td><b>remaining time</b><br><span id=\"remainingTime\">-1</span></td>\n        <td>\n          <b>skippable state</b><br>\n          <span id=\"skippableState\">False</span>\n        </td>\n      </tr>\n      <tr>\n        <td><b>volume</b><br><span id=\"volume\">1.0</span></td>\n        <td><b>view mode</b><br><span id=\"viewMode\">normal</span></td>\n        <td><b>width</b><br><span id=\"width\">5</span></td>\n      </tr>\n    </table>\n    <div>\n      <hr>\n      <div id=\"AdClickThruOptions\" style=\"display:none;\">\n        Click Through URL <input type=\"text\" id=\"clickThruUrl\" value=\"http://example.com\"/><br>\n        ID <input type=\"text\" id=\"clickThruId\" value=\"1\"/><br>\n        Player Handles <input type=\"text\" id=\"clickThruPlayerHandels\" value=\"false\"/><br>\n      </div>\n      <div id=\"AdErrorOptions\" style=\"display:none;\">\n        AdError <input type=\"text\" id=\"adErrorMsg\" value=\"ad error message\"/>\n      </div>\n      <div id=\"AdLogOptions\" style=\"display:none;\">\n        AdLog <input type=\"text\" id=\"adLogMsg\" value=\"ad log message\"/>\n      </div>\n      <div id=\"AdInteractionOptions\" style=\"display:none;\">\n        AdInteraction\n        <input type=\"text\" id=\"adInteractionId\" value=\"1\"/>\n      </div>\n    </div>\n    <h2><input type=\"button\" id=\"triggerEvent\" value=\"Trigger Event\"/></h2>\n  </div>\n  <div style=\"position:fixed; bottom:30px\">\n    Last event from player <input type=\"text\" style=\"width:200px\" id=\"lastVpaidEvent\" value=\"\"/>\n  </div>\n</div>";
 
@@ -869,4 +1176,4 @@ VpaidAdInspector.prototype.fillProperties_ = function () {
   }
 };
 
-},{"vpaid-ad/src/linear":4,"vpaid-ad/src/trigger":6}]},{},[8]);
+},{"path":1,"vpaid-ad/src/linear":5,"vpaid-ad/src/trigger":7}]},{},[9]);
