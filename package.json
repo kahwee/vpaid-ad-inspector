@@ -12,7 +12,7 @@
     "test": "mocha ."
   },
   "dependencies": {
-    "vpaid-ad": "^1.0.12"
+    "vpaid-ad": "^2.0.6"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
