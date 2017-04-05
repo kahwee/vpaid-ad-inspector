@@ -23,7 +23,7 @@
     "brfs": "^1.4.3",
     "browserify": "^13.0.1",
     "mocha": "^3.0.0",
-    "standard": "^7.1.2",
+    "standard": "^10.0.0",
     "uglify-js": "^2.7.0"
   },
   "browserify": {
