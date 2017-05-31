@@ -1,5 +1,7 @@
 # vpaid-ad-inspector
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kahwee/vpaid-ad-inspector.svg)](https://greenkeeper.io/)
+
 [![npm version](https://badge.fury.io/js/vpaid-ad-inspector.svg)](https://badge.fury.io/js/vpaid-ad-inspector)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 [![bitHound Score](https://www.bithound.io/github/kahwee/vpaid-ad-inspector/badges/score.svg)](https://www.bithound.io/github/kahwee/vpaid-ad-inspector)
