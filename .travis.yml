@@ -4,6 +4,8 @@ node_js:
 - '7'
 addons:
   chrome: stable
+before_install:
+  - export CHROME_BIN=/usr/bin/google-chrome
 cache:
   directories:
   - node_modules
