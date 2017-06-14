@@ -1,4 +1,4 @@
-import Linear from '../src/linear.js'
+import VpaidAdInspector from '../src/linear.js'
 let vpaid
 let slot
 let videoSlot
@@ -11,7 +11,7 @@ const s = [
 ]
 describe('basic', function () {
   before(function () {
-    vpaid = new Linear()
+    vpaid = new VpaidAdInspector()
     slot = document.createElement('div')
     videoSlot = document.createElement('video')
     document.body.appendChild(slot)

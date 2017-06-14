@@ -63,122 +63,155 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vpaid_ad_src_linear__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vpaid_ad_src_linear___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vpaid_ad_src_linear__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__harness_html__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__harness_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__harness_html__);
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-class VpaidAdInspector extends __WEBPACK_IMPORTED_MODULE_0_vpaid_ad_src_linear___default.a {
-  initAd (width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
-    this._attributes.width = width
-    this._attributes.height = height
-    this._attributes.viewMode = viewMode
-    this._attributes.desiredBitrate = desiredBitrate
-    this._slot = environmentVars.slot
-    this._videoSlot = environmentVars.videoSlot
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    this.log('initAd ' + width + 'x' + height + ' ' + viewMode + ' ' + desiredBitrate)
-    this.renderSlot_()
-    this.addButtonListeners_()
-    this.fillProperties_()
-    this.emit('AdLoaded')
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _linear = __webpack_require__(4);
+
+var _linear2 = _interopRequireDefault(_linear);
+
+var _harness = __webpack_require__(2);
+
+var _harness2 = _interopRequireDefault(_harness);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var VpaidAdInspector = function (_Linear) {
+  _inherits(VpaidAdInspector, _Linear);
+
+  function VpaidAdInspector() {
+    _classCallCheck(this, VpaidAdInspector);
+
+    return _possibleConstructorReturn(this, (VpaidAdInspector.__proto__ || Object.getPrototypeOf(VpaidAdInspector)).apply(this, arguments));
   }
 
-  resizeAd (width, height, viewMode) {
-    super.resizeAd(width, height, viewMode)
-    this.log('resizeAd ' + width + 'x' + height + ' ' + viewMode)
-    this._attributes.width = width
-    this._attributes.height = height
-    this._attributes.viewMode = viewMode
-    this.fillProperties_()
-    this.emit('AdSizeChange')
-  }
+  _createClass(VpaidAdInspector, [{
+    key: 'initAd',
+    value: function initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
+      this._attributes.width = width;
+      this._attributes.height = height;
+      this._attributes.viewMode = viewMode;
+      this._attributes.desiredBitrate = desiredBitrate;
+      this._slot = environmentVars.slot;
+      this._videoSlot = environmentVars.videoSlot;
 
-  pauseAd () {
-    super.pauseAd()
-    this.log('pauseAd')
-  }
+      this.log('initAd ' + width + 'x' + height + ' ' + viewMode + ' ' + desiredBitrate);
+      this.renderSlot_();
+      this.addButtonListeners_();
+      this.fillProperties_();
+      this.emit('AdLoaded');
+    }
+  }, {
+    key: 'resizeAd',
+    value: function resizeAd(width, height, viewMode) {
+      _get(VpaidAdInspector.prototype.__proto__ || Object.getPrototypeOf(VpaidAdInspector.prototype), 'resizeAd', this).call(this, width, height, viewMode);
+      this.log('resizeAd ' + width + 'x' + height + ' ' + viewMode);
+      this._attributes.width = width;
+      this._attributes.height = height;
+      this._attributes.viewMode = viewMode;
+      this.fillProperties_();
+      this.emit('AdSizeChange');
+    }
+  }, {
+    key: 'pauseAd',
+    value: function pauseAd() {
+      _get(VpaidAdInspector.prototype.__proto__ || Object.getPrototypeOf(VpaidAdInspector.prototype), 'pauseAd', this).call(this);
+      this.log('pauseAd');
+    }
+  }, {
+    key: 'expandAd',
+    value: function expandAd() {
+      _get(VpaidAdInspector.prototype.__proto__ || Object.getPrototypeOf(VpaidAdInspector.prototype), 'expandAd', this).call(this);
+      this.log('expandAd');
+    }
+  }, {
+    key: 'collapseAd',
+    value: function collapseAd() {
+      _get(VpaidAdInspector.prototype.__proto__ || Object.getPrototypeOf(VpaidAdInspector.prototype), 'collapseAd', this).call(this);
+      this.log('collapseAd');
+    }
+  }]);
 
-  expandAd () {
-    super.expandAd()
-    this.log('expandAd')
-  }
+  return VpaidAdInspector;
+}(_linear2.default);
 
-  collapseAd () {
-    super.collapseAd()
-    this.log('collapseAd')
-  }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = VpaidAdInspector;
+exports.default = VpaidAdInspector;
 
 
 VpaidAdInspector.prototype.renderSlot_ = function () {
-  var slotExists = this._slot && this._slot.tagName === 'DIV'
+  var slotExists = this._slot && this._slot.tagName === 'DIV';
   if (!slotExists) {
-    this._slot = document.createElement('div')
+    this._slot = document.createElement('div');
     if (!document.body) {
-      document.body = document.createElement('body')
+      document.body = document.createElement('body');
     }
-    document.body.appendChild(this._slot)
+    document.body.appendChild(this._slot);
   }
-  this._slot.innerHTML = __WEBPACK_IMPORTED_MODULE_1__harness_html___default.a
-}
+  this._slot.innerHTML = _harness2.default;
+};
 
 /**
  * Adds all listeners to buttons.
  * @private
  */
 VpaidAdInspector.prototype.addButtonListeners_ = function () {
-  var eventSelect = document.getElementById('eventSelect')
-  eventSelect.addEventListener('change', this.eventSelected_.bind(this))
-  var triggerEvent = document.getElementById('triggerEvent')
-  triggerEvent.addEventListener('click', this.triggerEvent_.bind(this))
-}
+  var eventSelect = document.getElementById('eventSelect');
+  eventSelect.addEventListener('change', this.eventSelected_.bind(this));
+  var trigger = document.getElementById('trigger');
+  trigger.addEventListener('click', this.trigger_.bind(this));
+};
 
 /**
  * Triggers an event.
  * @private
  */
-VpaidAdInspector.prototype.triggerEvent_ = function () {
-  var eventSelect = document.getElementById('eventSelect')
-  var value = eventSelect.value
+VpaidAdInspector.prototype.trigger_ = function () {
+  var eventSelect = document.getElementById('eventSelect');
+  var value = eventSelect.value;
   if (value === 'AdClickThru') {
-    const clickThruUrl = document.getElementById('clickThruUrl').value
-    const clickThruId = document.getElementById('clickThruId').value
-    const clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value
-    this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')')
-    this.emit('AdClickThru', [
-      clickThruUrl,
-      clickThruId,
-      clickThruPlayerHandles
-    ])
+    var clickThruUrl = document.getElementById('clickThruUrl').value;
+    var clickThruId = document.getElementById('clickThruId').value;
+    var clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value;
+    this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')');
+    this.emit('AdClickThru', [clickThruUrl, clickThruId, clickThruPlayerHandles]);
   } else if (value === 'AdError') {
-    const adError = document.getElementById('adErrorMsg').value
-    this.log(`${value}(${adError})`)
-    this.emit('AdError', [adError])
+    var adError = document.getElementById('adErrorMsg').value;
+    this.log(value + '(' + adError + ')');
+    this.emit('AdError', [adError]);
   } else if (value === 'AdLog') {
-    const adLogMsg = document.getElementById('adLogMsg').value
-    this.log(`${value}(${adLogMsg})`)
-    this.emit('AdLog', [adLogMsg])
+    var adLogMsg = document.getElementById('adLogMsg').value;
+    this.log(value + '(' + adLogMsg + ')');
+    this.emit('AdLog', [adLogMsg]);
   } else if (value === 'AdInteraction') {
-    const adInteraction = document.getElementById('adInteractionId').value
-    this.log(`${value}(${adInteraction})`)
-    this.emit('AdInteraction', [adInteraction])
+    var adInteraction = document.getElementById('adInteractionId').value;
+    this.log(value + '(' + adInteraction + ')');
+    this.emit('AdInteraction', [adInteraction]);
   } else {
-    this.log(`${value}()`)
-    this.emit(value)
+    this.log(value + '()');
+    this.emit(value);
   }
-}
+};
 
 /**
  * Logs events and messages.
@@ -186,11 +219,11 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
  * @param {string} message
  */
 VpaidAdInspector.prototype.log = function (message) {
-  const logTextArea = document.getElementById('lastVpaidEvent')
+  var logTextArea = document.getElementById('last-vpaid-event');
   if (logTextArea != null) {
-    logTextArea.value = message
+    logTextArea.value = message;
   }
-}
+};
 
 /**
  * Callback function when an event is selected from the dropdown.
@@ -198,26 +231,26 @@ VpaidAdInspector.prototype.log = function (message) {
  * @private
  */
 VpaidAdInspector.prototype.eventSelected_ = function () {
-  var clickThruParams = document.getElementById('AdClickThruOptions')
-  var adErrorParams = document.getElementById('AdErrorOptions')
-  var adLogParams = document.getElementById('AdLogOptions')
-  var adInteractionParams = document.getElementById('AdInteractionOptions')
-  clickThruParams.style.display = 'none'
-  adErrorParams.style.display = 'none'
-  adLogParams.style.display = 'none'
-  adInteractionParams.style.display = 'none'
-  var eventSelect = document.getElementById('eventSelect')
-  var value = eventSelect.value
+  var clickThruParams = document.getElementById('AdClickThruOptions');
+  var adErrorParams = document.getElementById('AdErrorOptions');
+  var adLogParams = document.getElementById('AdLogOptions');
+  var adInteractionParams = document.getElementById('AdInteractionOptions');
+  clickThruParams.style.display = 'none';
+  adErrorParams.style.display = 'none';
+  adLogParams.style.display = 'none';
+  adInteractionParams.style.display = 'none';
+  var eventSelect = document.getElementById('eventSelect');
+  var value = eventSelect.value;
   if (value === 'AdClickThru') {
-    clickThruParams.style.display = 'inline'
+    clickThruParams.style.display = 'inline';
   } else if (value === 'AdError') {
-    adErrorParams.style.display = 'inline'
+    adErrorParams.style.display = 'inline';
   } else if (value === 'AdLog') {
-    adLogParams.style.display = 'inline'
+    adLogParams.style.display = 'inline';
   } else if (value === 'AdInteraction') {
-    adInteractionParams.style.display = 'inline'
+    adInteractionParams.style.display = 'inline';
   }
-}
+};
 
 /**
  * Populates all of the vpaid ad properties.
@@ -225,22 +258,38 @@ VpaidAdInspector.prototype.eventSelected_ = function () {
  * @private
  */
 VpaidAdInspector.prototype.fillProperties_ = function () {
-  for (const key in this._attributes) {
+  for (var key in this._attributes) {
     if (key && document.getElementById(key)) {
-      document.getElementById(key).textContent = this._attributes[key]
+      document.getElementById(key).textContent = this._attributes[key];
     }
   }
-}
-
+};
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<div style=background:#f5f5f5;width:100%;height:100%> <div style=height:100%;display:inline-block;float:left> <select id=eventSelect size=10> <option value=AdStarted selected=selected>AdStarted</option> <option value=AdStopped>AdStopped</option> <option value=AdLoaded>AdLoaded</option> <option value=AdLinearChange>AdLinearChange</option> <option value=AdSizeChange>AdSizeChange</option> <option value=AdExpandedChange>AdExpandedChange</option> <option value=AdSkippableStateChange>AdSkippableStateChange</option> <option value=AdDurationChange>AdDurationChange</option> <option value=AdRemainingTimeChange>AdRemainingTimeChange</option> <option value=AdVolumeChange>AdVolumeChange</option> <option value=AdImpression>AdImpression</option> <option value=AdVideoStart>AdVideoStart</option> <option value=AdVideoFirstQuartile>AdVideoFirstQuartile</option> <option value=AdVideoMidpoint>AdVideoMidpoint</option> <option value=AdVideoThirdQuartile>AdVideoThirdQuartile</option> <option value=AdVideoComplete>AdVideoComplete</option> <option value=AdUserAcceptInvitation>AdUserAcceptInvitation</option> <option value=AdUserMinimize>AdUserMinimize</option> <option value=AdUserClose>AdUserClose</option> <option value=AdPaused>AdPaused</option> <option value=AdPlaying>AdPlaying</option> <option value=AdClickThru>AdClickThru</option> <option value=AdError>AdError</option> <option value=AdLog>AdLog</option> <option value=AdInteraction>AdInteraction</option> </select> </div> <div> <table> <tr> <td> <b>companions</b> <br> <span id=companions>None</span> </td> <td> <b>desired bitrate</b> <br> <span id=desiredBitrate>-1</span> </td> <td> <b>duration</b><br><span id=duration>-1</span> </td> </tr> <tr> <td> <b>expanded</b><br><span id=expanded>false</span> </td> <td><b>height</b><br><span id=height>-1</span></td> <td><b>icons</b><br><span id=icons>None</span></td> </tr> <tr> <td><b>linear</b><br><span id=linear>True</span></td> <td><b>remaining time</b><br><span id=remainingTime>-1</span></td> <td> <b>skippable state</b><br> <span id=skippableState>False</span> </td> </tr> <tr> <td><b>volume</b><br><span id=volume>1.0</span></td> <td><b>view mode</b><br><span id=viewMode>normal</span></td> <td><b>width</b><br><span id=width>5</span></td> </tr> </table> <div> <hr> <div id=AdClickThruOptions style=display:none> Click Through URL <input type=text id=clickThruUrl value=http://example.com /><br> ID <input type=text id=clickThruId value=1 /><br> Player Handles <input type=text id=clickThruPlayerHandels value=false /><br> </div> <div id=AdErrorOptions style=display:none> AdError <input type=text id=adErrorMsg value=\"ad error message\"/> </div> <div id=AdLogOptions style=display:none> AdLog <input type=text id=adLogMsg value=\"ad log message\"/> </div> <div id=AdInteractionOptions style=display:none> AdInteraction <input type=text id=adInteractionId value=1 /> </div> </div> <h2><input type=button id=triggerEvent value=\"Trigger Event\"/></h2> </div> <div style=position:fixed;bottom:30px> Last event from player <input type=text style=width:200px id=lastVpaidEvent value=\"\"/> </div> </div>";
+"use strict";
+
+
+var _linear = __webpack_require__(0);
+
+var _linear2 = _interopRequireDefault(_linear);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+window.getVPAIDAd = function () {
+  return new _linear2.default();
+};
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+module.exports = "<div style=background:#f5f5f5;width:100%;height:100%> <div style=height:100%;display:inline-block;float:left> <select id=eventSelect size=10> <option value=AdStarted selected=selected>AdStarted</option> <option value=AdStopped>AdStopped</option> <option value=AdLoaded>AdLoaded</option> <option value=AdLinearChange>AdLinearChange</option> <option value=AdSizeChange>AdSizeChange</option> <option value=AdExpandedChange>AdExpandedChange</option> <option value=AdSkippableStateChange>AdSkippableStateChange</option> <option value=AdDurationChange>AdDurationChange</option> <option value=AdRemainingTimeChange>AdRemainingTimeChange</option> <option value=AdVolumeChange>AdVolumeChange</option> <option value=AdImpression>AdImpression</option> <option value=AdVideoStart>AdVideoStart</option> <option value=AdVideoFirstQuartile>AdVideoFirstQuartile</option> <option value=AdVideoMidpoint>AdVideoMidpoint</option> <option value=AdVideoThirdQuartile>AdVideoThirdQuartile</option> <option value=AdVideoComplete>AdVideoComplete</option> <option value=AdUserAcceptInvitation>AdUserAcceptInvitation</option> <option value=AdUserMinimize>AdUserMinimize</option> <option value=AdUserClose>AdUserClose</option> <option value=AdPaused>AdPaused</option> <option value=AdPlaying>AdPlaying</option> <option value=AdClickThru>AdClickThru</option> <option value=AdError>AdError</option> <option value=AdLog>AdLog</option> <option value=AdInteraction>AdInteraction</option> </select> </div> <div> <table> <tr> <td> <b>companions</b> <br> <span id=companions>None</span> </td> <td> <b>desired bitrate</b> <br> <span id=desiredBitrate>-1</span> </td> <td> <b>duration</b><br><span id=duration>-1</span> </td> </tr> <tr> <td> <b>expanded</b><br><span id=expanded>false</span> </td> <td><b>height</b><br><span id=height>-1</span></td> <td><b>icons</b><br><span id=icons>None</span></td> </tr> <tr> <td><b>linear</b><br><span id=linear>True</span></td> <td><b>remaining time</b><br><span id=remainingTime>-1</span></td> <td> <b>skippable state</b><br> <span id=skippableState>False</span> </td> </tr> <tr> <td><b>volume</b><br><span id=volume>1.0</span></td> <td><b>view mode</b><br><span id=viewMode>normal</span></td> <td><b>width</b><br><span id=width>5</span></td> </tr> </table> <div> <hr> <div id=AdClickThruOptions style=display:none> Click Through URL <input type=text id=clickThruUrl value=http://example.com /><br> ID <input type=text id=clickThruId value=1 /><br> Player Handles <input type=text id=clickThruPlayerHandels value=false /><br> </div> <div id=AdErrorOptions style=display:none> AdError <input type=text id=adErrorMsg value=\"ad error message\"/> </div> <div id=AdLogOptions style=display:none> AdLog <input type=text id=adLogMsg value=\"ad log message\"/> </div> <div id=AdInteractionOptions style=display:none> AdInteraction <input type=text id=adInteractionId value=1 /> </div> </div> <h2><input type=button id=trigger value=Trigger /></h2> </div> <div style=position:fixed;bottom:30px> Last event from player <input type=text style=width:200px id=last-vpaid-event value=\"\"/> </div> </div> ";
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 function E () {
@@ -312,13 +361,13 @@ module.exports = E;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const TinyEmitter = __webpack_require__(2)
-const vpaidMethods = __webpack_require__(7)
-const VideoTracker = __webpack_require__(5)
-const isSupported = __webpack_require__(4)
+const TinyEmitter = __webpack_require__(3)
+const vpaidMethods = __webpack_require__(8)
+const VideoTracker = __webpack_require__(6)
+const isSupported = __webpack_require__(5)
 
 function $removeAll () {
   this._destroyed = true
@@ -727,7 +776,7 @@ module.exports = Linear
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 let el
@@ -740,10 +789,10 @@ module.exports = function (type) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const vpaidLifeCycle = __webpack_require__(6)
+const vpaidLifeCycle = __webpack_require__(7)
 const quartiles = [
   {
     value: 0,
@@ -816,7 +865,7 @@ module.exports = VideoTracker
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -829,7 +878,7 @@ module.exports = [
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -855,19 +904,6 @@ module.exports = [
   'getAdIcons',
   'setAdVolume'
 ]
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__linear__ = __webpack_require__(0);
-
-window.getVPAIDAd = function () {
-  return new __WEBPACK_IMPORTED_MODULE_0__linear__["a" /* default */]()
-}
 
 
 /***/ })

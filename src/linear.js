@@ -1,4 +1,4 @@
-import Linear from 'vpaid-ad/src/linear'
+import Linear from 'vpaid-ad/src/linear.js'
 import htmlTemplate from './harness.html'
 
 export default class VpaidAdInspector extends Linear {

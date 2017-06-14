@@ -14,6 +14,8 @@ before_install:
 cache:
   directories:
   - node_modules
+after_script:
+  - npm run coveralls
 deploy:
   provider: s3
   bucket: vpaid-ad-inspector

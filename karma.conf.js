@@ -20,6 +20,16 @@ module.exports = function (config) {
         chunks: false
       }
     },
+    reporters: ['progress', 'coverage'],
+    coverageReporter: {
+      dir: 'coverage',
+      reporters: [
+        {
+          type: 'lcov',
+          subdir: 'report-lcov'
+        }
+      ]
+    },
     client: {
       mocha: {
         ui: 'bdd',
