@@ -1,13 +1,7 @@
 import Linear from 'vpaid-ad/src/linear'
-import $trigger from 'vpaid-ad/src/trigger'
-const path = require('path')
-const fs = require('fs')
-const htmlTemplate = fs.readFileSync(path.join(__dirname, 'harness.html'), {
-  encoding: 'utf8'
-})
+import htmlTemplate from './harness.html'
 
 export default class VpaidAdInspector extends Linear {
-
   initAd (width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
     this._attributes.width = width
     this._attributes.height = height
@@ -20,7 +14,7 @@ export default class VpaidAdInspector extends Linear {
     this.renderSlot_()
     this.addButtonListeners_()
     this.fillProperties_()
-    $trigger.call(this, 'AdLoaded')
+    this.emit('AdLoaded')
   }
 
   resizeAd (width, height, viewMode) {
@@ -30,7 +24,7 @@ export default class VpaidAdInspector extends Linear {
     this._attributes.height = height
     this._attributes.viewMode = viewMode
     this.fillProperties_()
-    $trigger.call(this, 'AdSizeChange')
+    this.emit('AdSizeChange')
   }
 
   pauseAd () {
@@ -68,15 +62,15 @@ VpaidAdInspector.prototype.renderSlot_ = function () {
 VpaidAdInspector.prototype.addButtonListeners_ = function () {
   var eventSelect = document.getElementById('eventSelect')
   eventSelect.addEventListener('change', this.eventSelected_.bind(this))
-  var triggerEvent = document.getElementById('triggerEvent')
-  triggerEvent.addEventListener('click', this.triggerEvent_.bind(this))
+  var trigger = document.getElementById('trigger')
+  trigger.addEventListener('click', this.trigger_.bind(this))
 }
 
 /**
  * Triggers an event.
  * @private
  */
-VpaidAdInspector.prototype.triggerEvent_ = function () {
+VpaidAdInspector.prototype.trigger_ = function () {
   var eventSelect = document.getElementById('eventSelect')
   var value = eventSelect.value
   if (value === 'AdClickThru') {
@@ -84,7 +78,7 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
     const clickThruId = document.getElementById('clickThruId').value
     const clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value
     this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')')
-    $trigger.call(this, 'AdClickThru', [
+    this.emit('AdClickThru', [
       clickThruUrl,
       clickThruId,
       clickThruPlayerHandles
@@ -92,18 +86,18 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
   } else if (value === 'AdError') {
     const adError = document.getElementById('adErrorMsg').value
     this.log(`${value}(${adError})`)
-    $trigger.call(this, 'AdError', [adError])
+    this.emit('AdError', [adError])
   } else if (value === 'AdLog') {
     const adLogMsg = document.getElementById('adLogMsg').value
     this.log(`${value}(${adLogMsg})`)
-    $trigger.call(this, 'AdLog', [adLogMsg])
+    this.emit('AdLog', [adLogMsg])
   } else if (value === 'AdInteraction') {
     const adInteraction = document.getElementById('adInteractionId').value
     this.log(`${value}(${adInteraction})`)
-    $trigger.call(this, 'AdInteraction', [adInteraction])
+    this.emit('AdInteraction', [adInteraction])
   } else {
     this.log(`${value}()`)
-    $trigger.call(this, value)
+    this.emit(value)
   }
 }
 
@@ -113,7 +107,7 @@ VpaidAdInspector.prototype.triggerEvent_ = function () {
  * @param {string} message
  */
 VpaidAdInspector.prototype.log = function (message) {
-  const logTextArea = document.getElementById('lastVpaidEvent')
+  const logTextArea = document.getElementById('last-vpaid-event')
   if (logTextArea != null) {
     logTextArea.value = message
   }

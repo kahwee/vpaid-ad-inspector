@@ -1,500 +1,340 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (process){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-// resolves . and .. elements in a path array with directory names there
-// must be no slashes, empty elements, or device names (c:\) in the array
-// (so also no leading and trailing slashes - it does not distinguish
-// relative and absolute paths)
-function normalizeArray(parts, allowAboveRoot) {
-  // if the path tries to go above the root, `up` ends up > 0
-  var up = 0;
-  for (var i = parts.length - 1; i >= 0; i--) {
-    var last = parts[i];
-    if (last === '.') {
-      parts.splice(i, 1);
-    } else if (last === '..') {
-      parts.splice(i, 1);
-      up++;
-    } else if (up) {
-      parts.splice(i, 1);
-      up--;
-    }
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vpaid_ad_src_linear__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vpaid_ad_src_linear___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vpaid_ad_src_linear__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__harness_html__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__harness_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__harness_html__);
+
+
+
+class VpaidAdInspector extends __WEBPACK_IMPORTED_MODULE_0_vpaid_ad_src_linear___default.a {
+  initAd (width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
+    this._attributes.width = width
+    this._attributes.height = height
+    this._attributes.viewMode = viewMode
+    this._attributes.desiredBitrate = desiredBitrate
+    this._slot = environmentVars.slot
+    this._videoSlot = environmentVars.videoSlot
+
+    this.log('initAd ' + width + 'x' + height + ' ' + viewMode + ' ' + desiredBitrate)
+    this.renderSlot_()
+    this.addButtonListeners_()
+    this.fillProperties_()
+    this.emit('AdLoaded')
   }
 
-  // if the path is allowed to go above the root, restore leading ..s
-  if (allowAboveRoot) {
-    for (; up--; up) {
-      parts.unshift('..');
-    }
+  resizeAd (width, height, viewMode) {
+    super.resizeAd(width, height, viewMode)
+    this.log('resizeAd ' + width + 'x' + height + ' ' + viewMode)
+    this._attributes.width = width
+    this._attributes.height = height
+    this._attributes.viewMode = viewMode
+    this.fillProperties_()
+    this.emit('AdSizeChange')
   }
 
-  return parts;
+  pauseAd () {
+    super.pauseAd()
+    this.log('pauseAd')
+  }
+
+  expandAd () {
+    super.expandAd()
+    this.log('expandAd')
+  }
+
+  collapseAd () {
+    super.collapseAd()
+    this.log('collapseAd')
+  }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = VpaidAdInspector;
+
+
+VpaidAdInspector.prototype.renderSlot_ = function () {
+  var slotExists = this._slot && this._slot.tagName === 'DIV'
+  if (!slotExists) {
+    this._slot = document.createElement('div')
+    if (!document.body) {
+      document.body = document.createElement('body')
+    }
+    document.body.appendChild(this._slot)
+  }
+  this._slot.innerHTML = __WEBPACK_IMPORTED_MODULE_1__harness_html___default.a
 }
 
-// Split a filename into [root, dir, basename, ext], unix version
-// 'root' is just a slash, or nothing.
-var splitPathRe =
-    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
-var splitPath = function(filename) {
-  return splitPathRe.exec(filename).slice(1);
-};
-
-// path.resolve([from ...], to)
-// posix version
-exports.resolve = function() {
-  var resolvedPath = '',
-      resolvedAbsolute = false;
-
-  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-    var path = (i >= 0) ? arguments[i] : process.cwd();
-
-    // Skip empty and invalid entries
-    if (typeof path !== 'string') {
-      throw new TypeError('Arguments to path.resolve must be strings');
-    } else if (!path) {
-      continue;
-    }
-
-    resolvedPath = path + '/' + resolvedPath;
-    resolvedAbsolute = path.charAt(0) === '/';
-  }
-
-  // At this point the path should be resolved to a full absolute path, but
-  // handle relative paths to be safe (might happen when process.cwd() fails)
-
-  // Normalize the path
-  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
-    return !!p;
-  }), !resolvedAbsolute).join('/');
-
-  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-};
-
-// path.normalize(path)
-// posix version
-exports.normalize = function(path) {
-  var isAbsolute = exports.isAbsolute(path),
-      trailingSlash = substr(path, -1) === '/';
-
-  // Normalize the path
-  path = normalizeArray(filter(path.split('/'), function(p) {
-    return !!p;
-  }), !isAbsolute).join('/');
-
-  if (!path && !isAbsolute) {
-    path = '.';
-  }
-  if (path && trailingSlash) {
-    path += '/';
-  }
-
-  return (isAbsolute ? '/' : '') + path;
-};
-
-// posix version
-exports.isAbsolute = function(path) {
-  return path.charAt(0) === '/';
-};
-
-// posix version
-exports.join = function() {
-  var paths = Array.prototype.slice.call(arguments, 0);
-  return exports.normalize(filter(paths, function(p, index) {
-    if (typeof p !== 'string') {
-      throw new TypeError('Arguments to path.join must be strings');
-    }
-    return p;
-  }).join('/'));
-};
-
-
-// path.relative(from, to)
-// posix version
-exports.relative = function(from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
-
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
-
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
-  }
-
-  var fromParts = trim(from.split('/'));
-  var toParts = trim(to.split('/'));
-
-  var length = Math.min(fromParts.length, toParts.length);
-  var samePartsLength = length;
-  for (var i = 0; i < length; i++) {
-    if (fromParts[i] !== toParts[i]) {
-      samePartsLength = i;
-      break;
-    }
-  }
-
-  var outputParts = [];
-  for (var i = samePartsLength; i < fromParts.length; i++) {
-    outputParts.push('..');
-  }
-
-  outputParts = outputParts.concat(toParts.slice(samePartsLength));
-
-  return outputParts.join('/');
-};
-
-exports.sep = '/';
-exports.delimiter = ':';
-
-exports.dirname = function(path) {
-  var result = splitPath(path),
-      root = result[0],
-      dir = result[1];
-
-  if (!root && !dir) {
-    // No dirname whatsoever
-    return '.';
-  }
-
-  if (dir) {
-    // It has a dirname, strip trailing slash
-    dir = dir.substr(0, dir.length - 1);
-  }
-
-  return root + dir;
-};
-
-
-exports.basename = function(path, ext) {
-  var f = splitPath(path)[2];
-  // TODO: make this comparison case-insensitive on windows?
-  if (ext && f.substr(-1 * ext.length) === ext) {
-    f = f.substr(0, f.length - ext.length);
-  }
-  return f;
-};
-
-
-exports.extname = function(path) {
-  return splitPath(path)[3];
-};
-
-function filter (xs, f) {
-    if (xs.filter) return xs.filter(f);
-    var res = [];
-    for (var i = 0; i < xs.length; i++) {
-        if (f(xs[i], i, xs)) res.push(xs[i]);
-    }
-    return res;
+/**
+ * Adds all listeners to buttons.
+ * @private
+ */
+VpaidAdInspector.prototype.addButtonListeners_ = function () {
+  var eventSelect = document.getElementById('eventSelect')
+  eventSelect.addEventListener('change', this.eventSelected_.bind(this))
+  var triggerEvent = document.getElementById('triggerEvent')
+  triggerEvent.addEventListener('click', this.triggerEvent_.bind(this))
 }
 
-// String.prototype.substr - negative index don't work in IE8
-var substr = 'ab'.substr(-1) === 'b'
-    ? function (str, start, len) { return str.substr(start, len) }
-    : function (str, start, len) {
-        if (start < 0) start = str.length + start;
-        return str.substr(start, len);
-    }
-;
-
-}).call(this,require('_process'))
-},{"_process":2}],2:[function(require,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-(function () {
-  try {
-    cachedSetTimeout = setTimeout;
-  } catch (e) {
-    cachedSetTimeout = function () {
-      throw new Error('setTimeout is not defined');
-    }
-  }
-  try {
-    cachedClearTimeout = clearTimeout;
-  } catch (e) {
-    cachedClearTimeout = function () {
-      throw new Error('clearTimeout is not defined');
-    }
-  }
-} ())
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = cachedSetTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    cachedClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        cachedSetTimeout(drainQueue, 0);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}],3:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function () {
-  if (this._destroyed) return;
-
-  _toggles.$removeAll.call(this);
-  _trigger2.default.call(this, 'AdStopped');
-};
-
-var _trigger = require('../trigger');
-
-var _trigger2 = _interopRequireDefault(_trigger);
-
-var _toggles = require('../toggles');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-},{"../toggles":6,"../trigger":7}],4:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function () {
-  if (this._destroyed) return;
-
-  var videoSlot = this._videoSlot;
-  var percentPlayed = _mapNumber(0, videoSlot.duration, 0, 100, videoSlot.currentTime);
-  var last = this._lastQuartilePosition;
-
-  if (percentPlayed < last.position) return;
-
-  if (last.hook) last.hook();
-
-  _trigger2.default.call(this, last.event);
-
-  var quartile = this._quartileEvents;
-  this._lastQuartilePosition = quartile[quartile.indexOf(last) + 1];
-};
-
-var _trigger = require('../trigger');
-
-var _trigger2 = _interopRequireDefault(_trigger);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _normNumber(start, end, value) {
-  return (value - start) / (end - start);
-}
-
-function _mapNumber(fromStart, fromEnd, toStart, toEnd, value) {
-  return toStart + (toEnd - toStart) * _normNumber(fromStart, fromEnd, value);
-}
-
-},{"../trigger":7}],5:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _loadCss = require('./util/load-css');
-
-var _loadCss2 = _interopRequireDefault(_loadCss);
-
-var _trigger = require('./trigger');
-
-var _trigger2 = _interopRequireDefault(_trigger);
-
-var _toggles = require('./toggles');
-
-var _vastEnded = require('./handler/vast-ended');
-
-var _vastEnded2 = _interopRequireDefault(_vastEnded);
-
-var _vastTimeupdate = require('./handler/vast-timeupdate');
-
-var _vastTimeupdate2 = _interopRequireDefault(_vastTimeupdate);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function $enableSkippable() {
-  this._attributes.skippableState = true;
-}
-
-function $throwError(msg) {
-  _trigger2.default.call(this, 'AdError', msg);
-}
-
-function $setVideoAd() {
-  var videoSlot = this._videoSlot;
-
-  if (!videoSlot) {
-    return $throwError.call(this, 'no video');
-  }
-  _setSize(videoSlot, [this._attributes.width, this._attributes.height]);
-
-  if (!_setSupportedVideo(videoSlot, this._parameters.videos || [])) {
-    return $throwError.call(this, 'no supported video found');
+/**
+ * Triggers an event.
+ * @private
+ */
+VpaidAdInspector.prototype.triggerEvent_ = function () {
+  var eventSelect = document.getElementById('eventSelect')
+  var value = eventSelect.value
+  if (value === 'AdClickThru') {
+    const clickThruUrl = document.getElementById('clickThruUrl').value
+    const clickThruId = document.getElementById('clickThruId').value
+    const clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value
+    this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')')
+    this.emit('AdClickThru', [
+      clickThruUrl,
+      clickThruId,
+      clickThruPlayerHandles
+    ])
+  } else if (value === 'AdError') {
+    const adError = document.getElementById('adErrorMsg').value
+    this.log(`${value}(${adError})`)
+    this.emit('AdError', [adError])
+  } else if (value === 'AdLog') {
+    const adLogMsg = document.getElementById('adLogMsg').value
+    this.log(`${value}(${adLogMsg})`)
+    this.emit('AdLog', [adLogMsg])
+  } else if (value === 'AdInteraction') {
+    const adInteraction = document.getElementById('adInteractionId').value
+    this.log(`${value}(${adInteraction})`)
+    this.emit('AdInteraction', [adInteraction])
+  } else {
+    this.log(`${value}()`)
+    this.emit(value)
   }
 }
 
-function _setSize(el, size) {
-  el.setAttribute('width', size[0]);
-  el.setAttribute('height', size[1]);
-  el.style.width = size[0] + 'px';
-  el.style.height = size[1] + 'px';
+/**
+ * Logs events and messages.
+ *
+ * @param {string} message
+ */
+VpaidAdInspector.prototype.log = function (message) {
+  const logTextArea = document.getElementById('lastVpaidEvent')
+  if (logTextArea != null) {
+    logTextArea.value = message
+  }
 }
 
-function _setSupportedVideo(videoEl, videos) {
-  var supportedVideos = videos.filter(function (video) {
-    return videoEl.canPlayType(video.mimetype);
-  });
-
-  if (supportedVideos.length === 0) return false;
-
-  videoEl.setAttribute('src', supportedVideos[0].url);
-
-  return true;
+/**
+ * Callback function when an event is selected from the dropdown.
+ *
+ * @private
+ */
+VpaidAdInspector.prototype.eventSelected_ = function () {
+  var clickThruParams = document.getElementById('AdClickThruOptions')
+  var adErrorParams = document.getElementById('AdErrorOptions')
+  var adLogParams = document.getElementById('AdLogOptions')
+  var adInteractionParams = document.getElementById('AdInteractionOptions')
+  clickThruParams.style.display = 'none'
+  adErrorParams.style.display = 'none'
+  adLogParams.style.display = 'none'
+  adInteractionParams.style.display = 'none'
+  var eventSelect = document.getElementById('eventSelect')
+  var value = eventSelect.value
+  if (value === 'AdClickThru') {
+    clickThruParams.style.display = 'inline'
+  } else if (value === 'AdError') {
+    adErrorParams.style.display = 'inline'
+  } else if (value === 'AdLog') {
+    adLogParams.style.display = 'inline'
+  } else if (value === 'AdInteraction') {
+    adInteractionParams.style.display = 'inline'
+  }
 }
 
-// function _createAndAppend (parent, tagName, className) {
-//   var el = document.createElement(tagName || 'div')
-//   el.className = className || ''
-//   parent.appendChild(el)
-//   return el
-// }
+/**
+ * Populates all of the vpaid ad properties.
+ *
+ * @private
+ */
+VpaidAdInspector.prototype.fillProperties_ = function () {
+  for (const key in this._attributes) {
+    if (key && document.getElementById(key)) {
+      document.getElementById(key).textContent = this._attributes[key]
+    }
+  }
+}
 
-var Linear = function () {
-  function Linear() {
-    _classCallCheck(this, Linear);
 
-    this._slot = null;
-    this._videoSlot = null;
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
 
-    this._subscribers = {};
+module.exports = "<div style=background:#f5f5f5;width:100%;height:100%> <div style=height:100%;display:inline-block;float:left> <select id=eventSelect size=10> <option value=AdStarted selected=selected>AdStarted</option> <option value=AdStopped>AdStopped</option> <option value=AdLoaded>AdLoaded</option> <option value=AdLinearChange>AdLinearChange</option> <option value=AdSizeChange>AdSizeChange</option> <option value=AdExpandedChange>AdExpandedChange</option> <option value=AdSkippableStateChange>AdSkippableStateChange</option> <option value=AdDurationChange>AdDurationChange</option> <option value=AdRemainingTimeChange>AdRemainingTimeChange</option> <option value=AdVolumeChange>AdVolumeChange</option> <option value=AdImpression>AdImpression</option> <option value=AdVideoStart>AdVideoStart</option> <option value=AdVideoFirstQuartile>AdVideoFirstQuartile</option> <option value=AdVideoMidpoint>AdVideoMidpoint</option> <option value=AdVideoThirdQuartile>AdVideoThirdQuartile</option> <option value=AdVideoComplete>AdVideoComplete</option> <option value=AdUserAcceptInvitation>AdUserAcceptInvitation</option> <option value=AdUserMinimize>AdUserMinimize</option> <option value=AdUserClose>AdUserClose</option> <option value=AdPaused>AdPaused</option> <option value=AdPlaying>AdPlaying</option> <option value=AdClickThru>AdClickThru</option> <option value=AdError>AdError</option> <option value=AdLog>AdLog</option> <option value=AdInteraction>AdInteraction</option> </select> </div> <div> <table> <tr> <td> <b>companions</b> <br> <span id=companions>None</span> </td> <td> <b>desired bitrate</b> <br> <span id=desiredBitrate>-1</span> </td> <td> <b>duration</b><br><span id=duration>-1</span> </td> </tr> <tr> <td> <b>expanded</b><br><span id=expanded>false</span> </td> <td><b>height</b><br><span id=height>-1</span></td> <td><b>icons</b><br><span id=icons>None</span></td> </tr> <tr> <td><b>linear</b><br><span id=linear>True</span></td> <td><b>remaining time</b><br><span id=remainingTime>-1</span></td> <td> <b>skippable state</b><br> <span id=skippableState>False</span> </td> </tr> <tr> <td><b>volume</b><br><span id=volume>1.0</span></td> <td><b>view mode</b><br><span id=viewMode>normal</span></td> <td><b>width</b><br><span id=width>5</span></td> </tr> </table> <div> <hr> <div id=AdClickThruOptions style=display:none> Click Through URL <input type=text id=clickThruUrl value=http://example.com /><br> ID <input type=text id=clickThruId value=1 /><br> Player Handles <input type=text id=clickThruPlayerHandels value=false /><br> </div> <div id=AdErrorOptions style=display:none> AdError <input type=text id=adErrorMsg value=\"ad error message\"/> </div> <div id=AdLogOptions style=display:none> AdLog <input type=text id=adLogMsg value=\"ad log message\"/> </div> <div id=AdInteractionOptions style=display:none> AdInteraction <input type=text id=adInteractionId value=1 /> </div> </div> <h2><input type=button id=triggerEvent value=\"Trigger Event\"/></h2> </div> <div style=position:fixed;bottom:30px> Last event from player <input type=text style=width:200px id=lastVpaidEvent value=\"\"/> </div> </div>";
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+function E () {
+  // Keep this empty so it's easier to inherit from
+  // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
+}
+
+E.prototype = {
+  on: function (name, callback, ctx) {
+    var e = this.e || (this.e = {});
+
+    (e[name] || (e[name] = [])).push({
+      fn: callback,
+      ctx: ctx
+    });
+
+    return this;
+  },
+
+  once: function (name, callback, ctx) {
+    var self = this;
+    function listener () {
+      self.off(name, listener);
+      callback.apply(ctx, arguments);
+    };
+
+    listener._ = callback
+    return this.on(name, listener, ctx);
+  },
+
+  emit: function (name) {
+    var data = [].slice.call(arguments, 1);
+    var evtArr = ((this.e || (this.e = {}))[name] || []).slice();
+    var i = 0;
+    var len = evtArr.length;
+
+    for (i; i < len; i++) {
+      evtArr[i].fn.apply(evtArr[i].ctx, data);
+    }
+
+    return this;
+  },
+
+  off: function (name, callback) {
+    var e = this.e || (this.e = {});
+    var evts = e[name];
+    var liveEvents = [];
+
+    if (evts && callback) {
+      for (var i = 0, len = evts.length; i < len; i++) {
+        if (evts[i].fn !== callback && evts[i].fn._ !== callback)
+          liveEvents.push(evts[i]);
+      }
+    }
+
+    // Remove event from queue to prevent memory leak
+    // Suggested by https://github.com/lazd
+    // Ref: https://github.com/scottcorgan/tiny-emitter/commit/c6ebfaa9bc973b33d110a84a307742b7cf94c953#commitcomment-5024910
+
+    (liveEvents.length)
+      ? e[name] = liveEvents
+      : delete e[name];
+
+    return this;
+  }
+};
+
+module.exports = E;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const TinyEmitter = __webpack_require__(2)
+const vpaidMethods = __webpack_require__(7)
+const VideoTracker = __webpack_require__(5)
+const isSupported = __webpack_require__(4)
+
+function $removeAll () {
+  this._destroyed = true
+  this._videoSlot.src = ''
+  this._slot.innerHTML = ''
+  this._ui = null
+}
+
+class Linear extends TinyEmitter {
+  constructor (opts = {}) {
+    super()
+    this.baseUrl = ''
+    this.emitVpaidMethodInvocations()
+    this._ui = {}
+    this.quartileIndexEmitted = -1
+    this.hasEngaged = false
 
     this._attributes = {
       companions: '',
@@ -504,676 +344,531 @@ var Linear = function () {
       expanded: false,
       icons: false,
       linear: true,
-      skippableState: false,
+      adSkippableState: false,
       viewMode: 'normal',
       width: 0,
       height: 0,
       volume: 1.0
-    };
+    }
 
-    this.previousAttributes = _extends({}, this._attributes);
+    this.previousAttributes = Object.assign({}, this._attributes)
 
     // open interactive panel -> AdExpandedChange, AdInteraction
     // when close panel -> AdExpandedChange, AdInteraction
 
-    this._quartileEvents = [{ event: 'AdVideoStart', position: 0 }, { event: 'AdVideoFirstQuartile', position: 25 }, { event: 'AdVideoMidpoint', position: 50 }, { event: 'AdSkippableStateChange', position: 65, hook: $enableSkippable.bind(this) }, { event: 'AdVideoThirdQuartile', position: 75 }, { event: 'AdVideoComplete', position: 100 }];
-
-    this._lastQuartilePosition = this._quartileEvents[0];
-
-    this._parameters = {};
+    this.opts = opts
+    this.opts.videos = this.opts.videos || []
   }
 
-  _createClass(Linear, [{
-    key: 'set',
-    value: function set(attribute, newValue) {
-      this.previousAttributes[attribute] = this._attributes[attribute];
-      this._attributes[attribute] = newValue;
-    }
+  set (attribute, newValue) {
+    this.previousAttributes[attribute] = this._attributes[attribute]
+    this._attributes[attribute] = newValue
+  }
 
-    /**
-     * The video player calls handshakeVersion immediately after loading the ad unit to indicate to the ad unit that VPAID will be used.
-     * The video player passes in its latest VPAID version string.
-     * The ad unit returns a version string minimally set to “1.0”, and of the form “major.minor.patch” (i.e. “2.1.05”).
-     * The video player must verify that it supports the particular version of VPAID or cancel the ad.
-     *
-     * @param {string} playerVPAIDVersion
-     * @return {string} adUnit VPAID version format 'major.minor.patch' minimum '1.0'
-     */
+  /**
+   * The video player calls handshakeVersion immediately after loading the ad unit to indicate to the ad unit that VPAID will be used.
+   * The video player passes in its latest VPAID version string.
+   * The ad unit returns a version string minimally set to “1.0”, and of the form “major.minor.patch” (i.e. “2.1.05”).
+   * The video player must verify that it supports the particular version of VPAID or cancel the ad.
+   *
+   * @param {string} playerVPAIDVersion
+   * @return {string} adUnit VPAID version format 'major.minor.patch' minimum '1.0'
+   */
+  handshakeVersion (playerVPAIDVersion) {
+    return '2.0'
+  }
 
-  }, {
-    key: 'handshakeVersion',
-    value: function handshakeVersion(playerVPAIDVersion) {
-      return '2.0';
-    }
+  appendStylesheet (path) {
+    const head = document.getElementsByTagName('head')[0]
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.type = 'text/css'
+    link.href = this.baseUrl + path
+    link.media = 'all'
+    head.appendChild(link)
+  }
 
-    /**
-     * After the ad unit is loaded and the video player calls handshakeVersion, the video player calls initAd() to initialize the ad experience.
-     *
-     * The video player may preload the ad unit and delay calling initAd() until nearing the ad playback time; however, the ad unit does not load its assets until initAd() is called. Once the ad unit’s assets are loaded, the ad unit sends the AdLoaded event to notify the video player that it is ready for display. Receiving the AdLoaded response indicates that the ad unit has verified that all files are ready to execute.
-     *
-     * @param {number} width    indicates the available ad display area width in pixels
-     * @param {number} height   indicates the available ad display area height in pixels
-     * @param {string} viewMode indicates either “normal”, “thumbnail”, or “fullscreen” as the view mode
-    for the video player as defined by the publisher. Default is “normal”.
-     * @param {number} desiredBitrate indicates the desired bitrate as number for kilobits per second
-    (kbps). The ad unit may use this information to select appropriate bitrate for any
-    streaming content.
-     * @param {object} creativeData (optional) used for additional initialization data. In a VAST context,
-    the ad unit should pass the value for either the Linear or Nonlinear AdParameter
-    element specified in the VAST document.
-     * @param {object} environmentVars (optional) used for passing implementation-specific runtime
-    variables. Refer to the language specific API description for more details.
-     */
+  /**
+   * After the ad unit is loaded and the video player calls handshakeVersion, the video player calls initAd() to initialize the ad experience.
+   *
+   * The video player may preload the ad unit and delay calling initAd() until nearing the ad playback time; however, the ad unit does not load its assets until initAd() is called. Once the ad unit’s assets are loaded, the ad unit sends the AdLoaded event to notify the video player that it is ready for display. Receiving the AdLoaded response indicates that the ad unit has verified that all files are ready to execute.
+   *
+   * @param {number} width    indicates the available ad display area width in pixels
+   * @param {number} height   indicates the available ad display area height in pixels
+   * @param {string} viewMode indicates either “normal”, “thumbnail”, or “fullscreen” as the view mode
+for the video player as defined by the publisher. Default is “normal”.
+   * @param {number} desiredBitrate indicates the desired bitrate as number for kilobits per second
+(kbps). The ad unit may use this information to select appropriate bitrate for any
+streaming content.
+   * @param {object} creativeData (optional) used for additional initialization data. In a VAST context,
+the ad unit should pass the value for either the Linear or Nonlinear AdParameter
+element specified in the VAST document.
+   * @param {object} environmentVars (optional) used for passing implementation-specific runtime
+variables. Refer to the language specific API description for more details.
+   */
+  initAd (width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
+    this._attributes.width = width
+    this._attributes.height = height
+    this._attributes.viewMode = viewMode
+    this._attributes.desiredBitrate = desiredBitrate
 
-  }, {
-    key: 'initAd',
-    value: function initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
-      this._attributes.width = width;
-      this._attributes.height = height;
-      this._attributes.viewMode = viewMode;
-      this._attributes.desiredBitrate = desiredBitrate;
+    this._slot = environmentVars.slot || this.emit('AdError', 'Video slot is invalid')
+    this._videoSlot = environmentVars.videoSlot || this.emit('AdError', 'Slot is invalid')
+    this.useBestVideo().then(() => {
+      this.emit('AdLoaded')
+    }).catch((reason) => {
+      this.emit('AdLog', reason)
+      this.emit('AdLoaded')
+    })
+    this.videoTracker = new VideoTracker(this._videoSlot, this)
+  }
 
-      this._slot = environmentVars.slot;
-      this._videoSlot = environmentVars.videoSlot;
-      this._style = (0, _loadCss2.default)('ad.css');
-      $setVideoAd.call(this);
-      this._videoSlot.addEventListener('timeupdate', _vastTimeupdate2.default.bind(this), false);
-      this._videoSlot.addEventListener('ended', _vastEnded2.default.bind(this), false);
-
-      _trigger2.default.call(this, 'AdLoaded');
-    }
-
-    /**
-     * startAd
-     *
-     */
-
-  }, {
-    key: 'startAd',
-    value: function startAd() {
-      this._videoSlot.play();
-      this._ui = {};
-      // this._ui.buy = _createAndAppend(this._slot, 'div', 'vpaidAdLinear')
-      // this._ui.banner = _createAndAppend(this._slot, 'div', 'banner')
-      // this._ui.xBtn = _createAndAppend(this._slot, 'button', 'close')
-      // this._ui.interact = _createAndAppend(this._slot, 'div', 'interact')
-
-      // this._ui.buy.addEventListener('click', $onClickThru.bind(this), false)
-      // this._ui.banner.addEventListener('click', $toggleExpand.bind(this, true), false)
-      // this._ui.xBtn.addEventListener('click', $toggleExpand.bind(this, false), false)
-      _trigger2.default.call(this, 'AdStarted');
-    }
-
-    /**
-     * stopAd
-     *
-     */
-
-  }, {
-    key: 'stopAd',
-    value: function stopAd() {
-      if (this._destroyed) return;
-      _toggles.$removeAll.call(this);
-      _trigger2.default.call(this, 'AdStopped');
-    }
-
-    /**
-     * skipAd
-     *
-     */
-
-  }, {
-    key: 'skipAd',
-    value: function skipAd() {
-      if (this._destroyed) return;
-      if (!this._attributes.skippableState) return;
-      _toggles.$removeAll.call(this);
-      _trigger2.default.call(this, 'AdSkipped');
-      _trigger2.default.call(this, 'AdStopped');
-    }
-
-    /**
-     * [resizeAd description]
-     * @param  {number} width    The maximum display area allotted for the ad. The ad unit must resize itself to a width and height that is within the values provided. The video player must always provide width and height unless it is in fullscreen mode. In fullscreen mode, the ad unit can ignore width/height parameters and resize to any dimension.
-     * @param  {number} height   The maximum display area allotted for the ad. The ad unit must resize itself to a width and height that is within the values provided. The video player must always provide width and height unless it is in fullscreen mode. In fullscreen mode, the ad unit can ignore width/height parameters and resize to any dimension.
-     * @param  {string} viewMode Can be one of “normal” “thumbnail” or “fullscreen” to indicate the mode to which the video player is resizing. Width and height are not required when viewmode is fullscreen.
-     * @return {[type]}          [description]
-     */
-
-  }, {
-    key: 'resizeAd',
-    value: function resizeAd(width, height, viewMode) {
-      this._attributes.width = width;
-      this._attributes.height = height;
-      this._attributes.viewMode = viewMode;
-      _trigger2.default.call(this, 'AdSizeChange');
-    }
-
-    /**
-     * pauseAd
-     *
-     */
-
-  }, {
-    key: 'pauseAd',
-    value: function pauseAd() {
-      this._videoSlot.pause();
-      _trigger2.default.call(this, 'AdPaused');
-    }
-
-    /**
-     * resumeAd
-     *
-     */
-
-  }, {
-    key: 'resumeAd',
-    value: function resumeAd() {
-      this._videoSlot.play();
-      _trigger2.default.call(this, 'AdPlaying');
-    }
-
-    /**
-     * expandAd
-     *
-     */
-
-  }, {
-    key: 'expandAd',
-    value: function expandAd() {
-      this.set('expanded', true);
-      _trigger2.default.call(this, 'AdExpandedChange');
-    }
-
-    /**
-     * collapseAd
-     *
-     */
-
-  }, {
-    key: 'collapseAd',
-    value: function collapseAd() {
-      this.set('expanded', false);
-      _trigger2.default.call(this, 'AdExpandedChange');
-    }
-
-    /**
-     * subscribe
-     *
-     * @param {function} handler
-     * @param {string} event
-     * @param {object} context
-     */
-
-  }, {
-    key: 'subscribe',
-    value: function subscribe(handler, event, context) {
-      if (!this._subscribers[event]) {
-        this._subscribers[event] = [];
+  useBestVideo () {
+    return new Promise((resolve, reject) => {
+      const bestVideo = this.opts.videos.filter(video => isSupported(video.type))
+      if (bestVideo[0]) {
+        this.setVideoSource(bestVideo[0].url, bestVideo[0].type)
+          .then(resolve).catch(reject)
+      } else {
+        reject(new Error('no supported video found'))
       }
-      this._subscribers[event].push({
-        callback: handler,
-        context: context
-      });
-    }
+    })
+  }
 
-    /**
-     * unsubscribe
-     *
-     * @param {function} handler
-     * @param {string} event
-     */
-
-  }, {
-    key: 'unsubscribe',
-    value: function unsubscribe(handler, event) {
-      var eventSubscribers = this._subscribers[event];
-      if (!Array.isArray(eventSubscribers)) return;
-      this._subscribers[event] = eventSubscribers.filter(function (subscriber) {
-        return handler !== subscriber;
-      });
-    }
-
-    /**
-     * getAdLinear
-     *
-     * @return {boolean}
-     */
-
-  }, {
-    key: 'getAdLinear',
-    value: function getAdLinear() {
-      return this._attributes.linear;
-    }
-
-    /**
-     * getAdWidth
-     *
-     * @return {number} pixel's size of the ad, is equal to or less than the values passed in resizeAd/initAd
-     */
-
-  }, {
-    key: 'getAdWidth',
-    value: function getAdWidth() {
-      return this._attributes.width;
-    }
-
-    /**
-     * getAdHeight
-     *
-     * @return {number} pixel's size of the ad, is equal to or less than the values passed in resizeAd/initAd
-     */
-
-  }, {
-    key: 'getAdHeight',
-    value: function getAdHeight() {
-      return this._attributes.height;
-    }
-
-    /**
-     * getAdExpanded
-     *
-     * @return {boolean}
-     */
-
-  }, {
-    key: 'getAdExpanded',
-    value: function getAdExpanded() {
-      return this._attributes.expanded;
-    }
-
-    /**
-     * getAdSkippableState - if the ad is in the position to be able to skip
-     *
-     * @return {boolean}
-     */
-
-  }, {
-    key: 'getAdSkippableState',
-    value: function getAdSkippableState() {
-      return this._attributes.skippableState;
-    }
-
-    /**
-     * getAdRemainingTime
-     *
-     * @return {number} seconds, if not implemented will return -1, or -2 if the time is unknown (user is engaged with the ad)
-     */
-
-  }, {
-    key: 'getAdRemainingTime',
-    value: function getAdRemainingTime() {
-      return this._attributes.remainingTime;
-    }
-
-    /**
-     * getAdDuration
-     *
-     * @return {number} seconds, if not implemented will return -1, or -2 if the time is unknown (user is engaged with the ad)
-     */
-
-  }, {
-    key: 'getAdDuration',
-    value: function getAdDuration() {
-      return this._attributes.duration;
-    }
-
-    /**
-     * getAdVolume
-     *
-     * @return {number} between 0 and 1, if is not implemented will return -1
-     */
-
-  }, {
-    key: 'getAdVolume',
-    value: function getAdVolume() {
-      return this._attributes.volume;
-    }
-
-    /**
-     * getAdCompanions - companions are banners outside the video player to reinforce the ad
-     *
-     * @return {string} VAST 3.0 formart string for <CompanionAds>
-     */
-
-  }, {
-    key: 'getAdCompanions',
-    value: function getAdCompanions() {
-      return this._attributes.companions;
-    }
-
-    /**
-     * getAdIcons
-     *
-     * @return {boolean} if true videoplayer may hide is own icons to not duplicate
-     */
-
-  }, {
-    key: 'getAdIcons',
-    value: function getAdIcons() {
-      return this._attributes.icons;
-    }
-
-    /**
-     * setAdVolume
-     *
-     * @param {number} volume  between 0 and 1
-     */
-
-  }, {
-    key: 'setAdVolume',
-    value: function setAdVolume(volume) {
-      if (this.previousAttributes.volume === volume) {
-        // no change, no fire
-        return;
+  setVideoSource (src, type) {
+    return new Promise((resolve, reject) => {
+      // As Google is not using an actual DOM video, it doesn't implement
+      // `onloadeddata`. In normal cases, `onloadeddata` is `null` when no
+      // handler function is assigned to it. However in Google's case, it
+      // returns as undefined.
+      if (typeof this._videoSlot.onloadeddata === 'undefined') {
+        resolve()
+      } else {
+        this._videoSlot.onloadeddata = resolve
       }
-      if (volume < 0 || volume > 1) {
-        return $throwError('volume is not valid');
+      this._videoSlot.onerror = function (ev) {
+        let msg
+        /* istanbul ignore next */
+        switch (ev.target.error.code) {
+          case ev.target.error.MEDIA_ERR_ABORTED:
+            msg = 'You aborted the video playback.'
+            break
+          case ev.target.error.MEDIA_ERR_NETWORK:
+            msg = 'A network error caused the video download to fail part-way.'
+            break
+          case ev.target.error.MEDIA_ERR_DECODE:
+            msg = 'The video playback was aborted due to a corruption problem or because the video used features your browser did not support.'
+            break
+          case ev.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+            msg = 'The video could not be loaded, either because the server or network failed or because the format is not supported.'
+            break
+          default:
+            msg = 'An unknown error occurred.'
+            break
+        }
+        reject(new Error(`${msg} Type: ${type}, source: ${src}`))
       }
-      this.set('volume', volume);
-      this._videoSlot.volume = volume;
-      _trigger2.default.call(this, 'AdVolumeChange');
+      this._videoSlot.src = src
+      this._videoSlot.type = type
+    })
+  }
+
+  /**
+   * startAd() is called by the video player when the video player is ready for the ad to
+   * display. The ad unit responds by sending an AdStarted event that notifies the video player
+   * when the ad unit has started playing. Once started, the video player cannot restart the ad unit
+   * by calling startAd() and stopAd() multiple times.
+   */
+  startAd () {
+    // As Google is not using an actual DOM video, it doesn't implement
+    // `onloadeddata`. In normal cases, `onloadeddata` is `null` when no
+    // handler function is assigned to it. However in Google's case, it
+    // returns as undefined.
+    if (typeof this._videoSlot.onloadeddata === 'undefined') {
+      this.emit('AdStarted')
+    } else {
+      // Ideally we want to wait till the first frame is present
+      this._videoSlot.onloadeddata = () => {
+        this.emit('AdStarted')
+      }
     }
-  }]);
+    this._videoSlot.load()
+  }
 
-  return Linear;
-}();
+  /**
+   * The video player calls stopAd() when it will no longer display the ad or needs to cancel
+   * the ad unit. The ad unit responds by closing the ad, cleaning up its resources and then sending
+   * the AdStopped event. The process for stopping an ad may take time.
+   */
+  stopAd () {
+    /* istanbul ignore if */
+    if (this._destroyed) return
+    $removeAll.call(this)
+    this.emit('AdStopped')
+  }
 
-exports.default = Linear;
+  /**
+   * skipAd
+   *
+   */
+  skipAd () {
+    /* istanbul ignore if */
+    if (this._destroyed) return
+    if (!this._attributes.adSkippableState) {
+      return false
+    }
+    $removeAll.call(this)
+    this.emit('AdSkipped')
+    this.emit('AdStopped')
+  }
 
-},{"./handler/vast-ended":3,"./handler/vast-timeupdate":4,"./toggles":6,"./trigger":7,"./util/load-css":8}],6:[function(require,module,exports){
-'use strict';
+  /**
+   * The resizeAd() method is only called when the video player changes the width and
+   * height of the video content container, which prompts the ad unit to scale or reposition. The ad
+   * unit then resizes itself to a width and height that is equal to or less than the width and height
+   * supplied by the video player. Once resized, the ad unit writes updated dimensions to the
+   * adWidth and adHeight properties and sends the AdSizeChange event to confirm that
+   * it has resized itself.
+   *
+   * @param  {number} width    The maximum display area allotted for the ad. The ad unit must resize itself to a width and height that is within the values provided. The video player must always provide width and height unless it is in fullscreen mode. In fullscreen mode, the ad unit can ignore width/height parameters and resize to any dimension.
+   * @param  {number} height   The maximum display area allotted for the ad. The ad unit must resize itself to a width and height that is within the values provided. The video player must always provide width and height unless it is in fullscreen mode. In fullscreen mode, the ad unit can ignore width/height parameters and resize to any dimension.
+   * @param  {string} viewMode Can be one of “normal” “thumbnail” or “fullscreen” to indicate the mode to which the video player is resizing. Width and height are not required when viewmode is fullscreen.
+   * @return {[type]}          [description]
+   */
+  resizeAd (width, height, viewMode) {
+    this._attributes.width = width
+    this._attributes.height = height
+    this._attributes.viewMode = viewMode
+    this.emit('AdSizeChange')
+  }
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.$toggleExpand = $toggleExpand;
-exports.$togglePlay = $togglePlay;
-exports.$toggleUI = $toggleUI;
-exports.$removeAll = $removeAll;
+  /**
+   * pauseAd
+   *
+   */
+  pauseAd () {
+    this._videoSlot.pause()
+    this.emit('AdPaused')
+  }
 
-var _trigger = require('./trigger');
+  /**
+   * resumeAd
+   *
+   */
+  resumeAd () {
+    this._videoSlot.play()
+    this.emit('AdPlaying')
+  }
 
-var _trigger2 = _interopRequireDefault(_trigger);
+  /**
+   * expandAd
+   *
+   */
+  expandAd () {
+    this.hasEngaged = true
+    this.set('expanded', true)
+    this.emit('AdExpandedChange')
+  }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  /**
+   * collapseAd
+   *
+   */
+  collapseAd () {
+    this.set('expanded', false)
+    this.emit('AdExpandedChange')
+  }
 
-function $toggleExpand(toExpand) {
-  $toggleUI.call(this, toExpand);
-  $togglePlay.call(this, toExpand);
+  /**
+   * The video player calls this method to register a listener to a particular event
+   *
+   * @param  {Function} fn            fn is a reference to the function that needs to be called when the specified event occurs
+   * @param  {string}   event         event is the name of the event that the video player is subscribing to
+   * @param  {[type]}   listenerScope [optional] listenerScope is a reference to the object in which the function is
+defined
+   */
+  subscribe (fn, event, listenerScope) {
+    this.on(event, fn, listenerScope)
+  }
 
-  this._attributes.expandAd = toExpand;
-  this._attributes.remainingTime = toExpand ? -2 : -1;
+  /**
+   * The video player calls this method to remove a listener for a particular event
+   *
+   * @param  {Function} fn    the event listener that is being removed
+   * @param  {string}   event event is the name of the event that the video player is unsubscribing from
+   */
+  unsubscribe (fn, event) {
+    this.off(event, fn)
+  }
 
-  _trigger2.default.call(this, 'AdExpandedChange');
-  _trigger2.default.call(this, 'AdDurationChange');
+  /**
+   * getAdLinear
+   *
+   * @return {boolean}
+   */
+  getAdLinear () {
+    return this._attributes.linear
+  }
+
+  /**
+   * added to provide current width of ad unit after ad has resized
+   *
+   * @return {number} pixel's size of the ad, is equal to or less than the values passed in resizeAd/initAd
+   */
+  getAdWidth () {
+    return this._attributes.width
+  }
+
+  /**
+   * added to provide current height of ad unit after ad has resized
+   *
+   * @return {number} pixel's size of the ad, is equal to or less than the values passed in resizeAd/initAd
+   */
+  getAdHeight () {
+    return this._attributes.height
+  }
+
+  /**
+   * getAdExpanded
+   *
+   * @return {boolean}
+   */
+  getAdExpanded () {
+    return this._attributes.expanded
+  }
+
+  /**
+   * in support of skippable ads, this feature enables the video
+   * player to identify when the ad is in a state where it can be skipped
+   *
+   * @return {boolean}
+   */
+  getAdSkippableState () {
+    return this._attributes.adSkippableState
+  }
+
+  /**
+   * getAdRemainingTime
+   *
+   * @return {number} seconds, if not implemented will return -1, or -2 if the time is unknown (user is engaged with the ad)
+   */
+  getAdRemainingTime () {
+    return this.hasEngaged ? -2 : this._videoSlot.duration - this._videoSlot.currentTime
+  }
+
+  /**
+   * reports total duration to more clearly report on the changing
+   * duration, which is confusing when both remaining time and duration can
+   * change
+   *
+   * @return {number} seconds, if not implemented will return -1, or -2 if the time is unknown (user is engaged with the ad)
+   */
+  getAdDuration () {
+    return this.hasEngaged ? -2 : this._videoSlot.duration
+  }
+
+  /**
+   * getAdVolume
+   *
+   * @return {number} between 0 and 1, if is not implemented will return -1
+   */
+  getAdVolume () {
+    return this._attributes.volume
+  }
+
+  /**
+   * getAdCompanions - companions are banners outside the video player to reinforce the ad
+   *
+   * @return {string} VAST 3.0 formart string for <CompanionAds>
+   */
+  getAdCompanions () {
+    return this._attributes.companions
+  }
+
+  /**
+   * included to support various industry programs which require the
+   * overlay of icons on the ad.
+   *
+   * @return {boolean} if true videoplayer may hide is own icons to not duplicate
+   */
+  getAdIcons () {
+    return this._attributes.icons
+  }
+
+  /**
+   * setAdVolume
+   *
+   * @param {number} volume  between 0 and 1
+   */
+  setAdVolume (volume) {
+    if (this.previousAttributes.volume === volume) {
+      // no change, no fire
+      return
+    }
+    if (volume < 0 || volume > 1) {
+      return this.emit('AdError', 'volume is not valid')
+    }
+    this.set('volume', volume)
+    this._videoSlot.volume = volume
+    this.emit('AdVolumeChange')
+  }
+
+  emitVpaidMethodInvocations () {
+    vpaidMethods.forEach((name) => {
+      const originalReference = this[name]
+      this[name] = (...rest) => {
+        this.emit(`${name}()`, ...rest)
+        return originalReference.apply(this, rest)
+      }
+    }, this)
+  }
+}
+module.exports = Linear
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+let el
+module.exports = function (type) {
+  if (!el) {
+    el = document.createElement('video')
+  }
+  return !!el.canPlayType(type).replace(/no/, '')
 }
 
-function $togglePlay(toPlay) {
-  if (toPlay) {
-    this._videoSlot.pause();
-  } else {
-    this._videoSlot.play();
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const vpaidLifeCycle = __webpack_require__(6)
+const quartiles = [
+  {
+    value: 0,
+    name: vpaidLifeCycle[0]
+  },
+  {
+    value: 0.25,
+    name: vpaidLifeCycle[1]
+  },
+  {
+    value: 0.50,
+    name: vpaidLifeCycle[2]
+  },
+  {
+    value: 0.75,
+    name: vpaidLifeCycle[3]
+  }
+]
+function handleTimeupdate () {
+  const upcomingQuartileIndex = this.quartileIndexEmitted + 1
+  const upcomingQuartile = quartiles[upcomingQuartileIndex]
+  if (upcomingQuartile && this.el.currentTime / this.el.duration > upcomingQuartile.value) {
+    this.emit(upcomingQuartile.name)
+    this.quartileIndexEmitted = upcomingQuartileIndex
   }
 }
 
-function $toggleUI(show) {
-  this._ui.interact.style.display = getDisplay();
-  this._ui.xBtn.style.display = getDisplay();
+function handleEnded () {
+  this.emit(vpaidLifeCycle[4])
+  // Garbage collect event listeners
+  this.removeEventListeners()
+}
 
-  function getDisplay() {
-    return show ? 'block' : 'none';
+class VideoTracker {
+  /**
+   * [constructor description]
+   * @param  {[type]} el      [description]
+   * @param  {TinyEmitter} emitter [description]
+   * @return {[type]}         [description]
+   */
+  constructor (el, emitter, prefix = 'AdVideo') {
+    this.el = el
+    this.emitter = emitter
+    this.prefix = prefix
+    this.quartileIndexEmitted = -1
+    this.addEventListeners()
+  }
+
+  emit (...rest) {
+    const eventName = this.prefix + rest[0]
+    return this.emitter.emit.apply(this.emitter, [eventName].concat(rest.splice(1)))
+  }
+
+  addEventListeners () {
+    this.events = {
+      handleTimeupdate: handleTimeupdate.bind(this),
+      handleEnded: handleEnded.bind(this)
+    }
+    this.el.addEventListener('timeupdate', this.events.handleTimeupdate)
+    this.el.addEventListener('ended', this.events.handleEnded)
+  }
+
+  removeEventListeners () {
+    this.el.removeEventListener('timeupdate', this.events.handleTimeupdate)
+    this.el.removeEventListener('ended', this.events.handleEnded)
   }
 }
 
-function $removeAll() {
-  this._destroyed = true;
-  this._videoSlot.src = '';
-  this._style.parentElement.removeChild(this._style);
-  this._slot.innerHTML = '';
-  this._ui = null;
-}
+module.exports = VideoTracker
 
-},{"./trigger":7}],7:[function(require,module,exports){
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+module.exports = [
+  'Start',
+  'FirstQuartile',
+  'Midpoint',
+  'ThirdQuartile',
+  'Complete'
+]
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+module.exports = [
+  'handshakeVersion',
+  'initAd',
+  'startAd',
+  'stopAd',
+  'skipAd',
+  'resizeAd',
+  'pauseAd',
+  'resumeAd',
+  'expandAd',
+  'collapseAd',
+  'getAdLinear',
+  'getAdWidth',
+  'getAdHeight',
+  'getAdExpanded',
+  'getAdadSkippableState',
+  'getAdRemainingTime',
+  'getAdDuration',
+  'getAdVolume',
+  'getAdCompanions',
+  'getAdIcons',
+  'setAdVolume'
+]
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function (event, msg) {
-  var subscribers = this._subscribers[event] || [];
-  subscribers.forEach(function (handlers) {
-    handlers.callback.apply(handlers.context, msg);
-  });
-};
-
-},{}],8:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function (url) {
-  var link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = url;
-  // parent returns Window object
-  parent.document.body.appendChild(link);
-  return link;
-};
-
-},{}],9:[function(require,module,exports){
-'use strict';
-
-var _linear = require('./linear');
-
-var _linear2 = _interopRequireDefault(_linear);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__linear__ = __webpack_require__(0);
 
 window.getVPAIDAd = function () {
-  return new _linear2.default();
-};
-
-},{"./linear":10}],10:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _linear = require('vpaid-ad/src/linear');
-
-var _linear2 = _interopRequireDefault(_linear);
-
-var _trigger = require('vpaid-ad/src/trigger');
-
-var _trigger2 = _interopRequireDefault(_trigger);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var path = require('path');
-
-var htmlTemplate = "<div style=\"background:#f5f5f5; width:100%; height:100%\">\n  <div style=\"height: 100%; display: inline-block; float:left;\">\n    <select id=\"eventSelect\" size=\"10\">\n      <option value=\"AdStarted\" selected>AdStarted</option>\n      <option value=\"AdStopped\">AdStopped</option>\n      <option value=\"AdLoaded\">AdLoaded</option>\n      <option value=\"AdLinearChange\">AdLinearChange</option>\n      <option value=\"AdSizeChange\">AdSizeChange</option>\n      <option value=\"AdExpandedChange\">AdExpandedChange</option>\n      <option value=\"AdSkippableStateChange\">AdSkippableStateChange</option>\n      <option value=\"AdDurationChange\">AdDurationChange</option>\n      <option value=\"AdRemainingTimeChange\">AdRemainingTimeChange</option>\n      <option value=\"AdVolumeChange\">AdVolumeChange</option>\n      <option value=\"AdImpression\">AdImpression</option>\n      <option value=\"AdVideoStart\">AdVideoStart</option>\n      <option value=\"AdVideoFirstQuartile\">AdVideoFirstQuartile</option>\n      <option value=\"AdVideoMidpoint\">AdVideoMidpoint</option>\n      <option value=\"AdVideoThirdQuartile\">AdVideoThirdQuartile</option>\n      <option value=\"AdVideoComplete\">AdVideoComplete</option>\n      <option value=\"AdUserAcceptInvitation\">AdUserAcceptInvitation</option>\n      <option value=\"AdUserMinimize\">AdUserMinimize</option>\n      <option value=\"AdUserClose\">AdUserClose</option>\n      <option value=\"AdPaused\">AdPaused</option>\n      <option value=\"AdPlaying\">AdPlaying</option>\n      <option value=\"AdClickThru\">AdClickThru</option>\n      <option value=\"AdError\">AdError</option>\n      <option value=\"AdLog\">AdLog</option>\n      <option value=\"AdInteraction\">AdInteraction</option>\n    </select>\n  </div>\n  <div>\n    <table>\n      <tr>\n        <td>\n          <b>companions</b>\n          <br>\n          <span id=\"companions\">None</span>\n        </td>\n        <td>\n          <b>desired bitrate</b>\n          <br>\n          <span id=\"desiredBitrate\">-1</span>\n        </td>\n        <td>\n          <b>duration</b><br><span id=\"duration\">-1</span>\n        </td>\n      </tr>\n      <tr>\n        <td>\n          <b>expanded</b><br><span id=\"expanded\">false</span>\n        </td>\n        <td><b>height</b><br><span id=\"height\">-1</span></td>\n        <td><b>icons</b><br><span id=\"icons\">None</span></td>\n      </tr>\n      <tr>\n        <td><b>linear</b><br><span id=\"linear\">True</span></td>\n        <td><b>remaining time</b><br><span id=\"remainingTime\">-1</span></td>\n        <td>\n          <b>skippable state</b><br>\n          <span id=\"skippableState\">False</span>\n        </td>\n      </tr>\n      <tr>\n        <td><b>volume</b><br><span id=\"volume\">1.0</span></td>\n        <td><b>view mode</b><br><span id=\"viewMode\">normal</span></td>\n        <td><b>width</b><br><span id=\"width\">5</span></td>\n      </tr>\n    </table>\n    <div>\n      <hr>\n      <div id=\"AdClickThruOptions\" style=\"display:none;\">\n        Click Through URL <input type=\"text\" id=\"clickThruUrl\" value=\"http://example.com\"/><br>\n        ID <input type=\"text\" id=\"clickThruId\" value=\"1\"/><br>\n        Player Handles <input type=\"text\" id=\"clickThruPlayerHandels\" value=\"false\"/><br>\n      </div>\n      <div id=\"AdErrorOptions\" style=\"display:none;\">\n        AdError <input type=\"text\" id=\"adErrorMsg\" value=\"ad error message\"/>\n      </div>\n      <div id=\"AdLogOptions\" style=\"display:none;\">\n        AdLog <input type=\"text\" id=\"adLogMsg\" value=\"ad log message\"/>\n      </div>\n      <div id=\"AdInteractionOptions\" style=\"display:none;\">\n        AdInteraction\n        <input type=\"text\" id=\"adInteractionId\" value=\"1\"/>\n      </div>\n    </div>\n    <h2><input type=\"button\" id=\"triggerEvent\" value=\"Trigger Event\"/></h2>\n  </div>\n  <div style=\"position:fixed; bottom:30px\">\n    Last event from player <input type=\"text\" style=\"width:200px\" id=\"lastVpaidEvent\" value=\"\"/>\n  </div>\n</div>";
-
-var VpaidAdInspector = function (_Linear) {
-  _inherits(VpaidAdInspector, _Linear);
-
-  function VpaidAdInspector() {
-    _classCallCheck(this, VpaidAdInspector);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(VpaidAdInspector).apply(this, arguments));
-  }
-
-  _createClass(VpaidAdInspector, [{
-    key: 'initAd',
-    value: function initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
-      this._attributes.width = width;
-      this._attributes.height = height;
-      this._attributes.viewMode = viewMode;
-      this._attributes.desiredBitrate = desiredBitrate;
-      this._slot = environmentVars.slot;
-      this._videoSlot = environmentVars.videoSlot;
-
-      this.log('initAd ' + width + 'x' + height + ' ' + viewMode + ' ' + desiredBitrate);
-      this.renderSlot_();
-      this.addButtonListeners_();
-      this.fillProperties_();
-      _trigger2.default.call(this, 'AdLoaded');
-    }
-  }, {
-    key: 'resizeAd',
-    value: function resizeAd(width, height, viewMode) {
-      _get(Object.getPrototypeOf(VpaidAdInspector.prototype), 'resizeAd', this).call(this, width, height, viewMode);
-      this.log('resizeAd ' + width + 'x' + height + ' ' + viewMode);
-      this._attributes.width = width;
-      this._attributes.height = height;
-      this._attributes.viewMode = viewMode;
-      this.fillProperties_();
-      _trigger2.default.call(this, 'AdSizeChange');
-    }
-  }, {
-    key: 'pauseAd',
-    value: function pauseAd() {
-      _get(Object.getPrototypeOf(VpaidAdInspector.prototype), 'pauseAd', this).call(this);
-      this.log('pauseAd');
-    }
-  }, {
-    key: 'expandAd',
-    value: function expandAd() {
-      _get(Object.getPrototypeOf(VpaidAdInspector.prototype), 'expandAd', this).call(this);
-      this.log('expandAd');
-    }
-  }, {
-    key: 'collapseAd',
-    value: function collapseAd() {
-      _get(Object.getPrototypeOf(VpaidAdInspector.prototype), 'collapseAd', this).call(this);
-      this.log('collapseAd');
-    }
-  }]);
-
-  return VpaidAdInspector;
-}(_linear2.default);
-
-exports.default = VpaidAdInspector;
+  return new __WEBPACK_IMPORTED_MODULE_0__linear__["a" /* default */]()
+}
 
 
-VpaidAdInspector.prototype.renderSlot_ = function () {
-  var slotExists = this._slot && this._slot.tagName === 'DIV';
-  if (!slotExists) {
-    this._slot = document.createElement('div');
-    if (!document.body) {
-      document.body = document.createElement('body');
-    }
-    document.body.appendChild(this._slot);
-  }
-  this._slot.innerHTML = htmlTemplate;
-};
-
-/**
- * Adds all listeners to buttons.
- * @private
- */
-VpaidAdInspector.prototype.addButtonListeners_ = function () {
-  var eventSelect = document.getElementById('eventSelect');
-  eventSelect.addEventListener('change', this.eventSelected_.bind(this));
-  var triggerEvent = document.getElementById('triggerEvent');
-  triggerEvent.addEventListener('click', this.triggerEvent_.bind(this));
-};
-
-/**
- * Triggers an event.
- * @private
- */
-VpaidAdInspector.prototype.triggerEvent_ = function () {
-  var eventSelect = document.getElementById('eventSelect');
-  var value = eventSelect.value;
-  if (value === 'AdClickThru') {
-    var clickThruUrl = document.getElementById('clickThruUrl').value;
-    var clickThruId = document.getElementById('clickThruId').value;
-    var clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value;
-    this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')');
-    _trigger2.default.call(this, 'AdClickThru', [clickThruUrl, clickThruId, clickThruPlayerHandles]);
-  } else if (value === 'AdError') {
-    var adError = document.getElementById('adErrorMsg').value;
-    this.log(value + '(' + adError + ')');
-    _trigger2.default.call(this, 'AdError', [adError]);
-  } else if (value === 'AdLog') {
-    var adLogMsg = document.getElementById('adLogMsg').value;
-    this.log(value + '(' + adLogMsg + ')');
-    _trigger2.default.call(this, 'AdLog', [adLogMsg]);
-  } else if (value === 'AdInteraction') {
-    var adInteraction = document.getElementById('adInteractionId').value;
-    this.log(value + '(' + adInteraction + ')');
-    _trigger2.default.call(this, 'AdInteraction', [adInteraction]);
-  } else {
-    this.log(value + '()');
-    _trigger2.default.call(this, value);
-  }
-};
-
-/**
- * Logs events and messages.
- *
- * @param {string} message
- */
-VpaidAdInspector.prototype.log = function (message) {
-  var logTextArea = document.getElementById('lastVpaidEvent');
-  if (logTextArea != null) {
-    logTextArea.value = message;
-  }
-};
-
-/**
- * Callback function when an event is selected from the dropdown.
- *
- * @private
- */
-VpaidAdInspector.prototype.eventSelected_ = function () {
-  var clickThruParams = document.getElementById('AdClickThruOptions');
-  var adErrorParams = document.getElementById('AdErrorOptions');
-  var adLogParams = document.getElementById('AdLogOptions');
-  var adInteractionParams = document.getElementById('AdInteractionOptions');
-  clickThruParams.style.display = 'none';
-  adErrorParams.style.display = 'none';
-  adLogParams.style.display = 'none';
-  adInteractionParams.style.display = 'none';
-  var eventSelect = document.getElementById('eventSelect');
-  var value = eventSelect.value;
-  if (value === 'AdClickThru') {
-    clickThruParams.style.display = 'inline';
-  } else if (value === 'AdError') {
-    adErrorParams.style.display = 'inline';
-  } else if (value === 'AdLog') {
-    adLogParams.style.display = 'inline';
-  } else if (value === 'AdInteraction') {
-    adInteractionParams.style.display = 'inline';
-  }
-};
-
-/**
- * Populates all of the vpaid ad properties.
- *
- * @private
- */
-VpaidAdInspector.prototype.fillProperties_ = function () {
-  for (var key in this._attributes) {
-    if (key && document.getElementById(key)) {
-      document.getElementById(key).textContent = this._attributes[key];
-    }
-  }
-};
-
-},{"path":1,"vpaid-ad/src/linear":5,"vpaid-ad/src/trigger":7}]},{},[9]);
+/***/ })
+/******/ ]);
