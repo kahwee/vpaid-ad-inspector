@@ -1,6 +1,16 @@
 import Linear from 'vpaid-ad/src/linear.js'
 import htmlTemplate from './harness.html'
 
+function log (evName, args) {
+  const logTextArea = document.getElementById('last-vpaid-event')
+  if (logTextArea) {
+    logTextArea.value = evName
+    if (args) {
+      logTextArea.value += ' ➠ (' + args.join(', ') + ')'
+    }
+  }
+}
+
 export default class VpaidAdInspector extends Linear {
   initAd (width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
     this._attributes.width = width
@@ -10,16 +20,21 @@ export default class VpaidAdInspector extends Linear {
     this._slot = environmentVars.slot
     this._videoSlot = environmentVars.videoSlot
 
-    this.log('initAd ' + width + 'x' + height + ' ' + viewMode + ' ' + desiredBitrate)
+    log('initAd', [width + 'x' + height, viewMode, desiredBitrate])
     this.renderSlot_()
-    this.addButtonListeners_()
+    this.ui = {
+      eventSelect: document.getElementById('eventSelect'),
+      trigger: document.getElementById('trigger')
+    }
+    this.ui.eventSelect.addEventListener('change', this.eventSelected_.bind(this))
+    this.ui.trigger.addEventListener('click', this.trigger_.bind(this))
     this.fillProperties_()
     this.emit('AdLoaded')
   }
 
   resizeAd (width, height, viewMode) {
     super.resizeAd(width, height, viewMode)
-    this.log('resizeAd ' + width + 'x' + height + ' ' + viewMode)
+    log('resizeAd', [width + 'x' + height, viewMode])
     this._attributes.width = width
     this._attributes.height = height
     this._attributes.viewMode = viewMode
@@ -29,17 +44,17 @@ export default class VpaidAdInspector extends Linear {
 
   pauseAd () {
     super.pauseAd()
-    this.log('pauseAd')
+    log('pauseAd')
   }
 
   expandAd () {
     super.expandAd()
-    this.log('expandAd')
+    log('expandAd')
   }
 
   collapseAd () {
     super.collapseAd()
-    this.log('collapseAd')
+    log('collapseAd')
   }
 }
 
@@ -56,17 +71,6 @@ VpaidAdInspector.prototype.renderSlot_ = function () {
 }
 
 /**
- * Adds all listeners to buttons.
- * @private
- */
-VpaidAdInspector.prototype.addButtonListeners_ = function () {
-  var eventSelect = document.getElementById('eventSelect')
-  eventSelect.addEventListener('change', this.eventSelected_.bind(this))
-  var trigger = document.getElementById('trigger')
-  trigger.addEventListener('click', this.trigger_.bind(this))
-}
-
-/**
  * Triggers an event.
  * @private
  */
@@ -77,7 +81,11 @@ VpaidAdInspector.prototype.trigger_ = function () {
     const clickThruUrl = document.getElementById('clickThruUrl').value
     const clickThruId = document.getElementById('clickThruId').value
     const clickThruPlayerHandles = document.getElementById('clickThruPlayerHandels').value
-    this.log('AdClickThu(' + clickThruUrl + ',' + clickThruId + ',' + clickThruPlayerHandles + ')')
+    log('AdClickThru', [
+      clickThruUrl,
+      clickThruId,
+      clickThruPlayerHandles
+    ])
     this.emit('AdClickThru', [
       clickThruUrl,
       clickThruId,
@@ -85,31 +93,19 @@ VpaidAdInspector.prototype.trigger_ = function () {
     ])
   } else if (value === 'AdError') {
     const adError = document.getElementById('adErrorMsg').value
-    this.log(`${value}(${adError})`)
-    this.emit('AdError', [adError])
+    log(value, [adError])
+    this.emit(value, [adError])
   } else if (value === 'AdLog') {
     const adLogMsg = document.getElementById('adLogMsg').value
-    this.log(`${value}(${adLogMsg})`)
-    this.emit('AdLog', [adLogMsg])
+    log(value, [adLogMsg])
+    this.emit(value, [adLogMsg])
   } else if (value === 'AdInteraction') {
     const adInteraction = document.getElementById('adInteractionId').value
-    this.log(`${value}(${adInteraction})`)
-    this.emit('AdInteraction', [adInteraction])
+    log(value, [adInteraction])
+    this.emit(value, [adInteraction])
   } else {
-    this.log(`${value}()`)
+    log(value)
     this.emit(value)
-  }
-}
-
-/**
- * Logs events and messages.
- *
- * @param {string} message
- */
-VpaidAdInspector.prototype.log = function (message) {
-  const logTextArea = document.getElementById('last-vpaid-event')
-  if (logTextArea != null) {
-    logTextArea.value = message
   }
 }
 
@@ -119,10 +115,10 @@ VpaidAdInspector.prototype.log = function (message) {
  * @private
  */
 VpaidAdInspector.prototype.eventSelected_ = function () {
-  var clickThruParams = document.getElementById('AdClickThruOptions')
-  var adErrorParams = document.getElementById('AdErrorOptions')
-  var adLogParams = document.getElementById('AdLogOptions')
-  var adInteractionParams = document.getElementById('AdInteractionOptions')
+  const clickThruParams = document.getElementById('AdClickThruOptions')
+  const adErrorParams = document.getElementById('AdErrorOptions')
+  const adLogParams = document.getElementById('AdLogOptions')
+  const adInteractionParams = document.getElementById('AdInteractionOptions')
   clickThruParams.style.display = 'none'
   adErrorParams.style.display = 'none'
   adLogParams.style.display = 'none'

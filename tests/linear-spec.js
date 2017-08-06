@@ -33,7 +33,7 @@ describe('basic', function () {
     it(`should emit ${k} when clicked`, function (done) {
       document.querySelector(`#eventSelect option[value=${k}]`).selected = true
       vpaid.subscribe((s) => {
-        expect(lastVpaidEvent.value).to.equal(`${k}()`)
+        expect(lastVpaidEvent.value).to.contain(k)
         done()
       }, k)
       btn.dispatchEvent(new MouseEvent('click'))
