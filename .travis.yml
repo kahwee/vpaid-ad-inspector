@@ -14,6 +14,8 @@ before_install:
 cache:
   directories:
   - node_modules
+script:
+  - npm run build
 after_script:
   - npm run coveralls
 deploy:
