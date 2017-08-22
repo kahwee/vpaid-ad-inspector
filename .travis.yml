@@ -12,12 +12,13 @@ before_script:
 before_install:
   - export CHROME_BIN=/usr/bin/google-chrome
 cache:
+  yarn: true
   directories:
-  - node_modules
+    - node_modules
 script:
-  - npm run build
+  - yarn build
 after_script:
-  - npm run coveralls
+  - yarn coveralls
 deploy:
   provider: s3
   bucket: vpaid-ad-inspector
