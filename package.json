@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "vpaid-ad": "^2.2.2"
+    "vpaid-ad": "^4.0.0"
   },
   "standard": {
     "ignore": [
