@@ -44,7 +44,7 @@
     "karma-cli": "^1.0.1",
     "karma-coverage": "^1.1.1",
     "karma-mocha": "^1.3.0",
-    "karma-webpack": "^2.0.4",
+    "karma-webpack": "^4.0.2",
     "mocha": "^5.0.0",
     "mocha-lcov-reporter": "^1.3.0",
     "standard": "^10.0.3",
