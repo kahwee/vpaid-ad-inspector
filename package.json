@@ -38,7 +38,7 @@
     "coveralls": "^3.0.0",
     "cross-env": "^5.0.5",
     "html-loader": "^0.5.1",
-    "karma": "^2.0.0",
+    "karma": "^5.0.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
